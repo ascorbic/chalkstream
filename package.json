@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "dev": "parcel src/index.html",
+    "dev": "NODE_ENV=production parcel src/index.html",
     "build": "parcel build src/index.html"
   },
   "keywords": [],
