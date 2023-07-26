@@ -1,5 +1,5 @@
 import { Config, Context } from "https://deploy-preview-243--edge.netlify.app";
-import { Blobs } from "https://deploy-preview-25--blobs-js.netlify.app/main.ts";
+import { Blobs } from "../blobs.ts";
 
 export default async function handler(request: Request, context: Context) {
   const blobs = new Blobs(context.blobs);

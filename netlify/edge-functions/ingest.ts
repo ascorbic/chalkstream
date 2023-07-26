@@ -1,5 +1,5 @@
 import { Config, Context } from "https://deploy-preview-243--edge.netlify.app";
-import type { Blobs } from "https://blobs-js.netlify.app/main.ts";
+import { Blobs } from "../blobs.ts";
 
 export interface Manifest {
   chunks: Array<{ sequence: number; duration: number }>;
@@ -17,6 +17,7 @@ export default async function handler(request: Request, context: Context) {
     console.log("no blobs");
     return new Response("No blobs", { status: 202 });
   }
+  const blobs = new Blobs(context.blobs);
 
   const sequenceHeader = request.headers.get("x-sequence");
   const session = request.headers.get("x-session");
@@ -41,13 +42,13 @@ export default async function handler(request: Request, context: Context) {
     return new Response("Invalid duration", { status: 400 });
   }
 
-  const blobs: Blobs = context.blobs;
-
   const key = `${session}/${sequence}.ts`;
   const manifestKey = `${session}/manifest.json`;
 
   try {
-    await blobs.set(key, request.body);
+    await blobs.set(key, request.body, {
+      contentLength: Number(request.headers.get("content-length")),
+    });
   } catch (e) {
     console.log(e);
     return new Response(e.message, { status: 500 });
