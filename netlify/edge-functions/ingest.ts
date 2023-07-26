@@ -32,10 +32,12 @@ export default async function handler(request: Request, context: Context) {
   const sequence = parseInt(sequenceHeader);
 
   if (sequenceHeader !== sequence.toString()) {
+    console.log("Invalid sequence header", sequenceHeader, sequence);
     return new Response("Invalid sequence", { status: 400 });
   }
 
   if (duration !== parseInt(duration).toString()) {
+    console.log("Invalid duration header", duration);
     return new Response("Invalid duration", { status: 400 });
   }
 
