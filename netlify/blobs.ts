@@ -153,6 +153,8 @@ export class Blobs {
     }
 
     if (res.status !== 200) {
+      console.log(res);
+
       throw new Error(
         `${method} operation has failed: store returned a ${res.status} response`
       );
