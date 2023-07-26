@@ -145,7 +145,7 @@ export class Blobs {
     if (method === HTTPMethod.Put) {
       headers["cache-control"] = "max-age=0, stale-while-revalidate=60";
     }
-
+    console.log(url, { headers, method });
     const res = await this.fetcher(url, { body, headers, method });
 
     if (res.status === 404 && method === HTTPMethod.Get) {
@@ -153,7 +153,12 @@ export class Blobs {
     }
 
     if (res.status !== 200) {
-      console.log(res);
+      try {
+        console.log(await res.json());
+      } catch (e) {
+        console.log(res);
+        // Ignore
+      }
 
       throw new Error(
         `${method} operation has failed: store returned a ${res.status} response`
