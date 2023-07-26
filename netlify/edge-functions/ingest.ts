@@ -36,7 +36,7 @@ export default async function handler(request: Request, context: Context) {
     return new Response("Invalid sequence", { status: 400 });
   }
 
-  if (duration !== parseInt(duration).toString()) {
+  if (!parseFloat(duration).toString()) {
     console.log("Invalid duration header", duration);
     return new Response("Invalid duration", { status: 400 });
   }
