@@ -46,9 +46,7 @@ export default async function handler(request: Request, context: Context) {
   const manifestKey = `${session}/manifest.json`;
 
   try {
-    await blobs.set(key, request.body, {
-      contentLength: Number(request.headers.get("content-length")),
-    });
+    await blobs.set(key, await request.arrayBuffer());
   } catch (e) {
     console.log(e);
     return new Response(e.message, { status: 500 });
