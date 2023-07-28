@@ -3,8 +3,11 @@ import type { Blobs } from "https://blobs-js.netlify.app/main.ts";
 
 export default async function handler(request: Request, context: Context) {
   const url = new URL(request.url);
-  const [_, session, sequence] = url.pathname.split("/");
-  console.log(request);
+  console.log(url.pathname);
+  const [_, _root, session, sequence] = url.pathname.split("/");
+
+  // TODO validate session and sequence
+
   if (request.method !== "GET") {
     return new Response(`Method ${request.method} not allowed`, {
       status: 405,
