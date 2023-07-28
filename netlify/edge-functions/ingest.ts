@@ -1,12 +1,10 @@
 import { Config, Context } from "https://deploy-preview-243--edge.netlify.app";
-import { Blobs } from "../blobs.ts";
 
 export interface Manifest {
   chunks: Array<{ sequence: number; duration: number }>;
   targetDuration: number;
 }
 export default async function handler(request: Request, context: Context) {
-  console.log(request.headers, context.blobs);
   if (request.method !== "PUT") {
     return new Response(`Method ${request.method} not allowed`, {
       status: 405,
@@ -17,7 +15,7 @@ export default async function handler(request: Request, context: Context) {
     console.log("no blobs");
     return new Response("No blobs", { status: 202 });
   }
-  const blobs = new Blobs(context.blobs);
+  const blobs = context.blobs;
 
   const sequenceHeader = request.headers.get("x-sequence");
   const session = request.headers.get("x-session");

@@ -6,6 +6,11 @@ const worker = new Worker(new URL("./transcode.worker.ts", import.meta.url), {
   type: "module",
 });
 
+worker.onmessage = ({ data }) => {
+  const { outputFileName, buffer } = data;
+  downloadBlob(new Blob([buffer], { type: "video/mp2t" }), outputFileName);
+};
+
 let recorder: MediaRecorder;
 
 function downloadBlob(blob: Blob, name = "file") {

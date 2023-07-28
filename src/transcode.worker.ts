@@ -68,6 +68,10 @@ onmessage = async (event: MessageEvent<TransmuxMessage>) => {
   // Delete output files from FFmpeg filesystem
   ffmpeg.FS("unlink", outputFileName);
   await putChunk(data, sequence, length, session);
+  postMessage(
+    { outputFileName, buffer: data.buffer },
+    { transfer: [data.buffer] }
+  );
 };
 
 function putChunk(
