@@ -20,6 +20,8 @@ export default async function handler(request: Request, context: Context) {
     return new Response("No blobs", { status: 202 });
   }
 
+  console.log(`getting ${session}/${sequence}.ts`);
+
   try {
     const body = await blobs.get(`${session}/${sequence}.ts`);
     return new Response(body, {

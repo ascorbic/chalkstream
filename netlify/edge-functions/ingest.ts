@@ -43,9 +43,11 @@ export default async function handler(request: Request, context: Context) {
   }
 
   const key = `${session}/${sequence}.ts`;
+
   const manifestKey = `${session}/manifest.json`;
 
   try {
+    console.log(`setting ${key}`);
     await blobs.set(key, await request.arrayBuffer());
   } catch (e) {
     console.log(e);
@@ -64,6 +66,8 @@ export default async function handler(request: Request, context: Context) {
   }
 
   config.chunks.push({ sequence, duration: parseInt(duration) });
+
+  console.log({ config });
 
   await blobs.setJSON(manifestKey, config);
 
