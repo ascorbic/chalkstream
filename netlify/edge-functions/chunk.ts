@@ -27,7 +27,9 @@ export default async function handler(request: Request, context: Context) {
   }
 
   try {
-    const body = await blobs.get(`${session}/${sequence}.ts`);
+    const body = await blobs.get(`${session}/${sequence}.ts`, {
+      type: "arrayBuffer",
+    });
     return new Response(body, {
       headers: {
         "Content-Type": "video/mp2t",
