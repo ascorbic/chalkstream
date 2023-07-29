@@ -13,7 +13,7 @@ async function load() {
     const pattern = new URLPattern({
       pathname: "/play/:sessionid",
     });
-    const result = pattern.exec(window.location.pathname);
+    const result = pattern.exec(window.location.href);
     const { sessionid } = result?.pathname.groups ?? {};
     if (!sessionid) {
       console.log("no sessionid");
