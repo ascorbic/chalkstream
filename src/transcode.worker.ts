@@ -65,7 +65,14 @@ onmessage = async (event: MessageEvent<TransmuxMessage>) => {
 
   // Delete output files from FFmpeg filesystem
   ffmpeg.FS("unlink", outputFileName);
-  await putChunk(data, sequence, length, session);
+  const res = await putChunk(data, sequence, length, session);
+  if (res.ok) {
+    console.log("Uploaded chunk", { sequence, length, session });
+    postMessage({});
+  } else {
+    console.log("Failed to upload chunk", { sequence, length, session });
+    postMessage({ error: res.text().catch(() => res.statusText) });
+  }
 };
 
 async function putChunk(

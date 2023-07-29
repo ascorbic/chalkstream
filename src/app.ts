@@ -9,10 +9,6 @@ const playbackLink = document.getElementById(
 ) as HTMLAnchorElement;
 sessionIdInput.oninput = () => {
   playbackLink.href = `/play/${sessionIdInput.value}`;
-  playbackLink.innerText = new URL(
-    `/play/${sessionIdInput.value}`,
-    document.location.href
-  ).href;
 };
 sessionIdInput.value = ulid();
 sessionIdInput.oninput(new Event("init"));
@@ -20,6 +16,13 @@ sessionIdInput.oninput(new Event("init"));
 const worker = new Worker(new URL("./transcode.worker.ts", import.meta.url), {
   type: "module",
 });
+
+worker.onmessage = (event) => {
+  if (event.data.error) {
+    console.error(event.data.error);
+  }
+  playbackLink.hidden = false;
+};
 
 let recorder: MediaRecorder;
 
@@ -89,18 +92,38 @@ async function initRecorder() {
   });
 }
 
+// rest of your code...
+
+let isRecording = false; // add a state variable
+
 const start = document.getElementById("start") as HTMLButtonElement;
 
 // Add an event listener for when button is clicked
 start.addEventListener("click", async () => {
-  // Disable button
-  start.disabled = true;
+  // If not recording, start the recorder
+  if (!isRecording) {
+    // Start recorder with timeslice of 6 seconds
+    recorder.start(timeslice);
 
-  // Start recorder with timeslice of 6 seconds
-  recorder.start(timeslice);
+    // Write a message to console
+    console.log("Recorder started");
 
-  // Write a message to console
-  console.log("Recorder started");
+    // Enable stop state
+    isRecording = true;
+    start.textContent = "Stop";
+  }
+  // If recording, stop the recorder
+  else {
+    // Stop the recorder
+    recorder.stop();
+
+    // Write a message to console
+    console.log("Recorder stopped");
+
+    // Enable start state
+    isRecording = false;
+    start.textContent = "Start";
+  }
 });
 
 initRecorder();
