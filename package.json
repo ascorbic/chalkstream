@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "dev": "NODE_ENV=production parcel dev src/*.html",
+    "dev": "NODE_ENV=production parcel src/*.html",
     "build": "parcel build src/*.html"
   },
   "keywords": [],
@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "hls.js": "^1.4.10",
+    "netlify-identity-widget": "^1.9.2",
     "ulid": "^2.3.0",
     "urlpattern-polyfill": "^9.0.0"
   }

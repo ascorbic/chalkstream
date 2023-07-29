@@ -1,5 +1,8 @@
 import type { TransmuxMessage } from "./transcode.worker";
+import netlifyIdentity from "netlify-identity-widget";
 import { ulid } from "ulid";
+
+netlifyIdentity.init();
 
 const timeslice = 6000;
 
@@ -118,6 +121,8 @@ const start = document.getElementById("start") as HTMLButtonElement;
 
 // Add an event listener for when button is clicked
 start.addEventListener("click", () => {
+  const user = netlifyIdentity.currentUser();
+
   // Disable button
   start.disabled = true;
 
