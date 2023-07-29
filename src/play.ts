@@ -16,3 +16,5 @@ player.src({
   src: `/playlist/${sessionid}.m3u8`,
   type: "application/x-mpegURL",
 });
+
+player.play()?.catch((e) => console.log(e));
