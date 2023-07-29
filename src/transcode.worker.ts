@@ -31,6 +31,7 @@ import("@ffmpeg/ffmpeg").then(async ({ createFFmpeg }) => {
   console.log("FFmpeg loaded");
 });
 
+// Received a job from the main thread
 onmessage = async (event: MessageEvent<TransmuxMessage>) => {
   const { buffer, sequence, length, session, transcodeVideo } = event.data;
 
@@ -40,9 +41,9 @@ onmessage = async (event: MessageEvent<TransmuxMessage>) => {
   // Write input file to FFmpeg virtual filesystem
   ffmpeg.FS("writeFile", inputFileName, new Uint8Array(buffer));
 
-  // Run FFmpeg command to transmux from WebM to TS
   console.time("transmux");
 
+  // Run FFmpeg command to transmux from WebM to TS
   await ffmpeg.run(
     "-i",
     inputFileName,
@@ -57,18 +58,14 @@ onmessage = async (event: MessageEvent<TransmuxMessage>) => {
     "mpegts",
     outputFileName
   );
-
   console.timeEnd("transmux");
+
   // Read output file from FFmpeg virtual filesystem as array buffer
   const data = ffmpeg.FS("readFile", outputFileName);
 
   // Delete output files from FFmpeg filesystem
   ffmpeg.FS("unlink", outputFileName);
   await putChunk(data, sequence, length, session);
-  postMessage(
-    { outputFileName, buffer: data.buffer },
-    { transfer: [data.buffer] }
-  );
 };
 
 async function putChunk(
@@ -77,11 +74,10 @@ async function putChunk(
   duration: number,
   session: string
 ) {
-  console.log("putting chunk", sequence, duration, session);
   console.time("hash");
   const hash = await getDigest(chunk);
   console.timeEnd("hash");
-  console.log("hash", hash);
+  console.log("Uploading chunk", { sequence, duration, session, hash });
   return fetch(`/ingest/${session}/${hash}.ts`, {
     method: "PUT",
     body: chunk,

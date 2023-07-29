@@ -5,14 +5,14 @@ export interface Manifest {
   targetDuration: number;
 }
 
+const pattern = new URLPattern({ pathname: "/ingest/:session/:digest.ts" });
+
 export default async function handler(request: Request, context: Context) {
   if (request.method !== "PUT") {
     return new Response(`Method ${request.method} not allowed`, {
       status: 405,
     });
   }
-
-  const pattern = new URLPattern({ pathname: "/ingest/:session/:digest.ts" });
 
   const result = pattern.exec(request.url);
 
@@ -21,12 +21,12 @@ export default async function handler(request: Request, context: Context) {
   if (!session || !digest) {
     return new Response("Not found", { status: 404 });
   }
+  const { blobs } = context;
 
-  if (!context.blobs) {
+  if (!blobs) {
     console.log("no blobs");
     return new Response("No blobs", { status: 202 });
   }
-  const blobs = context.blobs;
 
   const sequenceHeader = request.headers.get("x-sequence");
   const duration = request.headers.get("x-duration");

@@ -1,8 +1,7 @@
 import { Context, Config } from "https://deploy-preview-243--edge.netlify.app/";
-import type { Blobs } from "https://blobs-js.netlify.app/main.ts";
 import type { Manifest } from "./ingest.ts";
 
-function jsonToManifest(json: Manifest, session: string): string {
+function manifestToPlaylist(json: Manifest, session: string): string {
   const sorted = json.chunks.sort((a, b) => a.sequence - b.sequence);
   return `#EXTM3U
 #EXT-X-VERSION:4
@@ -19,6 +18,9 @@ ${sorted
   .join("\n")}
 `;
 }
+
+const pattern = new URLPattern({ pathname: "/playlist/:session.m3u8" });
+
 export default async function handler(request: Request, context: Context) {
   if (request.method !== "GET") {
     return new Response(`Method ${request.method} not allowed`, {
@@ -26,30 +28,26 @@ export default async function handler(request: Request, context: Context) {
     });
   }
 
-  const pattern = new URLPattern({ pathname: "/manifest/:session.m3u8" });
-
   const result = pattern.exec(request.url);
 
   const { session } = result?.pathname.groups ?? {};
-  console.log(result?.pathname.groups);
 
   if (!session) {
     return new Response("Not found", { status: 404 });
   }
   console.log(`getting ${session}/manifest.json`);
 
-  const blobs: Blobs = context.blobs;
-  if (!blobs) {
+  if (!context.blobs) {
     console.log("no blobs");
     return new Response("No blobs", { status: 202 });
   }
 
   try {
-    const manifest = await blobs.get(`${session}/manifest.json`, {
+    const manifest = await context.blobs.get(`${session}/manifest.json`, {
       type: "json",
     });
 
-    return new Response(jsonToManifest(manifest, session), {
+    return new Response(manifestToPlaylist(manifest, session), {
       headers: {
         "Content-Type": "application/x-mpegURL",
         "Access-Control-Allow-Origin": "*",
@@ -65,5 +63,5 @@ export default async function handler(request: Request, context: Context) {
 }
 
 export const config: Config = {
-  path: "/manifest/*.m3u8",
+  path: "/playlist/*.m3u8",
 };
