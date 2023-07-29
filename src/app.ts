@@ -122,7 +122,7 @@ const start = document.getElementById("start") as HTMLButtonElement;
 // Add an event listener for when button is clicked
 start.addEventListener("click", () => {
   const user = netlifyIdentity.currentUser();
-
+  console.log({ user });
   // Disable button
   start.disabled = true;
 
