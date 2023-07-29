@@ -8,9 +8,6 @@ dependencies:
   '@ffmpeg/ffmpeg':
     specifier: ^0.11.6
     version: 0.11.6
-  hls.js:
-    specifier: ^1.4.10
-    version: 1.4.10
   netlify-identity-widget:
     specifier: ^1.9.2
     version: 1.9.2
@@ -1340,10 +1337,6 @@ packages:
     resolution: {integrity: sha512-EykJT/Q1KjTWctppgIAgfSO0tKVuZUjhgMr17kqTumMl6Afv3EISleU7qZUzoXDFTAHTDC4NOoG/ZxU3EvlMPQ==}
     engines: {node: '>=8'}
     dev: true
-
-  /hls.js@1.4.10:
-    resolution: {integrity: sha512-wAVSj4Fm2MqOHy5+BlYnlKxXvJlv5IuZHjlzHu18QmjRzSDFQiUDWdHs5+NsFMQrgKEBwuWDcyvaMC9dUzJ5Uw==}
-    dev: false
 
   /htmlnano@2.0.4(svgo@2.8.0):
     resolution: {integrity: sha512-WGCkyGFwjKW1GeCBsPYacMvaMnZtFJ0zIRnC2NCddkA+IOEhTqskXrS7lep+3yYZw/nQ3dW1UAX4yA/GJyR8BA==}
