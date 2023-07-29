@@ -79,7 +79,9 @@ async function initRecorder() {
         buffer,
         sequence,
         length: timeslice,
-        session: "session",
+        session:
+          (document.getElementById("session") as HTMLInputElement).value ||
+          "session",
         transcodeVideo,
       };
       sequence++;
