@@ -82,8 +82,10 @@ async function initRecorder() {
       sequence++;
       // Send message to worker, and transfer ownership of buffer
       worker.postMessage(message, [buffer]);
-
-      recorder.start(timeslice);
+      // If we're recording, start a new clip
+      if (isRecording) {
+        recorder.start(timeslice);
+      }
 
       return;
     }
@@ -92,32 +94,26 @@ async function initRecorder() {
   });
 }
 
-// rest of your code...
-
-let isRecording = false; // add a state variable
+let isRecording = false;
 
 const start = document.getElementById("start") as HTMLButtonElement;
 
-// Add an event listener for when button is clicked
 start.addEventListener("click", async () => {
   // If not recording, start the recorder
   if (!isRecording) {
     // Start recorder with timeslice of 6 seconds
     recorder.start(timeslice);
 
-    // Write a message to console
-    console.log("Recorder started");
-
     // Enable stop state
     isRecording = true;
     start.textContent = "Stop";
-  }
-  // If recording, stop the recorder
-  else {
+  } else {
+    // If recording, stop the recorder
+    isRecording = false;
+
     // Stop the recorder
     recorder.stop();
 
-    // Write a message to console
     console.log("Recorder stopped");
 
     // Enable start state
