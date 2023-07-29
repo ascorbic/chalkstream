@@ -7,26 +7,13 @@
     <link href="https://vjs.zencdn.net/8.3.0/video-js.css" rel="stylesheet" />
   </head>
   <body>
-    <video id="video" class="video-js" controls data-setup="{}"></video>
-    <script src="https://vjs.zencdn.net/8.3.0/video.min.js"></script>
-    <script>
-      console.log({ videojs });
-      const player = globalThis.videojs?.("video");
-      if (!player) {
-        console.log("no player");
-      }
-
-      const segments = window.location.pathname.split("/");
-
-      const sessionid = segments[2];
-
-      if (!sessionid) {
-        console.log("no sessionid");
-      }
-      player.src({
-        src: `/playlist/${sessionid}.m3u8`,
-        type: "application/x-mpegURL",
-      });
-    </script>
+    <video
+      id="video"
+      class="video-js"
+      controls
+      autoplay
+      data-setup="{}"
+    ></video>
+    <script type="module" src="play.ts"></script>
   </body>
 </html>

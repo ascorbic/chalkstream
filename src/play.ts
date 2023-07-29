@@ -1,28 +1,17 @@
-async function load() {
-  if (!("URLPattern" in globalThis)) {
-    await import("urlpattern-polyfill");
-  }
-  const player = globalThis.videojs?.("video");
-  if (!player) {
-    console.log("no player");
-    return;
-  }
-  const pattern = new URLPattern({
-    pathname: "/play/:sessionid",
-  });
+import videojs from "video.js";
 
-  const result = pattern.exec(window.location.href);
-
-  const { sessionid } = result?.pathname.groups ?? {};
-
-  if (!sessionid) {
-    console.log("no sessionid");
-    return;
-  }
-
-  player.src({
-    src: `/playlist/${sessionid}.m3u8`,
-    type: "application/x-mpegURL",
-  });
+const player = videojs("video");
+if (!player) {
+  console.log("no player");
 }
-load();
+
+const [, , sessionid] = window.location.pathname.split("/");
+
+if (!sessionid) {
+  console.log("no sessionid");
+}
+
+player.src({
+  src: `/playlist/${sessionid}.m3u8`,
+  type: "application/x-mpegURL",
+});
