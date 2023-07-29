@@ -118,11 +118,16 @@ async function initRecorder() {
 }
 
 const start = document.getElementById("start") as HTMLButtonElement;
-const user = netlifyIdentity.currentUser();
-console.log({ user });
 
 // Add an event listener for when button is clicked
-start.addEventListener("click", () => {
+start.addEventListener("click", async () => {
+  try {
+    const user = await netlifyIdentity.refresh();
+    console.log({ user });
+  } catch (e) {
+    console.error(e);
+  }
+
   // Disable button
   start.disabled = true;
 

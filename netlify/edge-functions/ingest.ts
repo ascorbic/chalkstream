@@ -4,6 +4,14 @@ export interface Manifest {
   chunks: Array<{ sequence: number; duration: number }>;
   targetDuration: number;
 }
+
+async function getDigest(file: ArrayBuffer): Promise<string> {
+  const hash = await crypto.subtle.digest("SHA-256", file);
+  return Array.from(new Uint8Array(hash))
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+}
+
 export default async function handler(request: Request, context: Context) {
   if (request.method !== "PUT") {
     return new Response(`Method ${request.method} not allowed`, {
@@ -46,7 +54,12 @@ export default async function handler(request: Request, context: Context) {
 
   try {
     console.log(`setting ${key}`);
-    await blobs.set(key, await request.arrayBuffer(), { ttl: 60 * 60 });
+    const body = await request.arrayBuffer();
+    console.time("digest");
+    const digest = await getDigest(body);
+    console.timeEnd("digest");
+    console.log({ digest });
+    await blobs.set(key, body, { ttl: 60 * 60 });
   } catch (e) {
     console.log(e);
     return new Response(e.message, { status: 500 });

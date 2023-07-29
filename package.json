@@ -8,16 +8,13 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
-    "@ffmpeg/ffmpeg": "^0.11.6",
-    "buffer": "^5.5.0||^6.0.0",
-    "crypto-browserify": "^3.12.0",
     "parcel": "^2.9.3",
-    "path-browserify": "^1.0.0",
     "process": "^0.11.10"
   },
   "dependencies": {
+    "@ffmpeg/ffmpeg": "^0.11.6",
     "hls.js": "^1.4.10",
     "netlify-identity-widget": "^1.9.2",
     "ulid": "^2.3.0",

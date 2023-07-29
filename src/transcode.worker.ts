@@ -35,12 +35,10 @@ onmessage = async (event: MessageEvent<TransmuxMessage>) => {
   const { buffer, sequence, length, session, transcodeVideo } = event.data;
 
   const inputFileName = `${sequence + 1}.webm`;
-
-  // Write array buffer to FFmpeg filesystem as input file
-  ffmpeg.FS("writeFile", inputFileName, new Uint8Array(buffer));
-
-  // Generate a random file name for output file using timestamp
   const outputFileName = `${sequence + 1}.ts`;
+
+  // Write input file to FFmpeg virtual filesystem
+  ffmpeg.FS("writeFile", inputFileName, new Uint8Array(buffer));
 
   // Run FFmpeg command to transmux from WebM to TS
   console.time("transmux");
@@ -52,14 +50,16 @@ onmessage = async (event: MessageEvent<TransmuxMessage>) => {
     // If it's already H.264, we can just copy the video stream
     transcodeVideo ? "libx264" : "copy",
     "-c:a",
+    // Transcode audio to AAC
     "aac",
     "-f",
+    // Set output format to MPEG-TS
     "mpegts",
     outputFileName
   );
 
   console.timeEnd("transmux");
-  // Read output file from FFmpeg filesystem as array buffer
+  // Read output file from FFmpeg virtual filesystem as array buffer
   const data = ffmpeg.FS("readFile", outputFileName);
 
   // Delete output files from FFmpeg filesystem
@@ -71,13 +71,17 @@ onmessage = async (event: MessageEvent<TransmuxMessage>) => {
   );
 };
 
-function putChunk(
+async function putChunk(
   chunk: Uint8Array,
   sequence: number,
   duration: number,
   session: string
 ) {
   console.log("putting chunk", sequence, duration, session);
+  console.time("hash");
+  const hash = await getDigest(chunk);
+  console.timeEnd("hash");
+  console.log("hash", hash);
   return fetch("/ingest", {
     method: "PUT",
     body: chunk,
@@ -88,4 +92,11 @@ function putChunk(
       "X-Duration": (duration / 1000).toFixed(2),
     },
   });
+}
+
+async function getDigest(file: Uint8Array): Promise<string> {
+  const hash = await crypto.subtle.digest("SHA-256", file);
+  return Array.from(new Uint8Array(hash))
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
 }
