@@ -1,6 +1,21 @@
 import type { TransmuxMessage } from "./transcode.worker";
+import { ulid } from "ulid";
 
 const timeslice = 6000;
+
+const sessionIdInput = document.getElementById("session") as HTMLInputElement;
+const playbackLink = document.getElementById(
+  "playback-link"
+) as HTMLAnchorElement;
+sessionIdInput.oninput = () => {
+  playbackLink.href = `/play/${sessionIdInput.value}`;
+  playbackLink.innerText = new URL(
+    `/play/${sessionIdInput.value}`,
+    document.location.href
+  ).href;
+};
+sessionIdInput.value = ulid();
+sessionIdInput.oninput(new Event("init"));
 
 const worker = new Worker(new URL("./transcode.worker.ts", import.meta.url), {
   type: "module",
