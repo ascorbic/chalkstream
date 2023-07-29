@@ -46,7 +46,7 @@ export default async function handler(request: Request, context: Context) {
 
   try {
     console.log(`setting ${key}`);
-    await blobs.set(key, await request.arrayBuffer());
+    await blobs.set(key, await request.arrayBuffer(), { ttl: 60 * 60 });
   } catch (e) {
     console.log(e);
     return new Response(e.message, { status: 500 });
@@ -67,7 +67,7 @@ export default async function handler(request: Request, context: Context) {
 
   console.log({ config });
 
-  await blobs.setJSON(manifestKey, config);
+  await blobs.setJSON(manifestKey, config, { ttl: 60 * 60 });
 
   return new Response("OK", { status: 202 });
 }
