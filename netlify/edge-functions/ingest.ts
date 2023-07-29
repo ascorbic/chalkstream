@@ -3,6 +3,7 @@ import { Config, Context } from "https://deploy-preview-243--edge.netlify.app";
 export interface Manifest {
   chunks: Array<{ sequence: number; duration: number; digest: string }>;
   targetDuration: number;
+  lastTimestamp: number;
 }
 
 const pattern = new URLPattern({ pathname: "/ingest/:session/:digest.ts" });
@@ -67,10 +68,12 @@ export default async function handler(request: Request, context: Context) {
   let config: Manifest = {
     chunks: [],
     targetDuration: parseInt(duration) ?? 6,
+    lastTimestamp: Date.now(),
   };
 
   try {
     config = JSON.parse(await blobs.get(manifestKey));
+    config.lastTimestamp = Date.now();
   } catch (e) {
     console.log(e);
   }

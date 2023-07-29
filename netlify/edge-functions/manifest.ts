@@ -2,10 +2,13 @@ import { Context, Config } from "https://deploy-preview-243--edge.netlify.app/";
 import type { Manifest } from "./ingest.ts";
 
 function manifestToPlaylist(json: Manifest, session: string): string {
+  // If there have been no chunks in the last 20 seconds, the stream has probably ended
+  const hasEnded = Date.now() - json.lastTimestamp > 20_000;
+
   const sorted = json.chunks.sort((a, b) => a.sequence - b.sequence);
   return `#EXTM3U
 #EXT-X-VERSION:4
-#EXT-X-PLAYLIST-TYPE:EVENT
+#EXT-X-PLAYLIST-TYPE:${hasEnded ? "VOD" : "EVENT"}
 #EXT-X-INDEPENDENT-SEGMENTS
 #EXT-X-TARGETDURATION:${json.targetDuration}
 #EXT-X-MEDIA-SEQUENCE:0
@@ -17,6 +20,7 @@ ${sorted
       )},\n/chunks/${session}/${chunk.digest}.ts`
   )
   .join("\n")}
+${hasEnded ? "#EXT-X-ENDLIST" : ""}
 `;
 }
 
