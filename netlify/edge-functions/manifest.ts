@@ -26,7 +26,7 @@ export default async function handler(request: Request, context: Context) {
     });
   }
 
-  const pattern = new URLPattern({ pathname: "/manifest/:session.m3u3" });
+  const pattern = new URLPattern({ pathname: "/manifest/:session.m3u8" });
 
   const result = pattern.exec(request.url);
 
@@ -64,5 +64,5 @@ export default async function handler(request: Request, context: Context) {
 }
 
 export const config: Config = {
-  path: "/manifest/*.m3u3",
+  path: "/manifest/*.m3u8",
 };
