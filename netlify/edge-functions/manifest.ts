@@ -49,7 +49,7 @@ export default async function handler(request: Request, context: Context) {
       type: "json",
     });
 
-    return new Response(jsonToManifest(manifest), {
+    return new Response(jsonToManifest(manifest, session), {
       headers: {
         "Content-Type": "application/x-mpegURL",
         "Access-Control-Allow-Origin": "*",
