@@ -14,6 +14,9 @@ worker.onmessage = ({ data }) => {
 let recorder: MediaRecorder;
 
 function downloadBlob(blob: Blob, name = "file") {
+  if (!(document.getElementById("download") as HTMLInputElement).checked) {
+    return;
+  }
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.download = name;
@@ -68,7 +71,9 @@ async function initRecorder() {
     // This is the last chunk, so we need to transcode it
     if (recorder.state === "inactive") {
       // Concatenate all chunks into a single ArrayBuffer which we'll send to the worker
-      const buffer = await new Blob(chunks).arrayBuffer();
+      const blob = new Blob(chunks, { type: mimeType });
+      await downloadBlob(blob, `${sequence + 1}.webm`);
+      const buffer = await blob.arrayBuffer();
       chunks.length = 0;
       const message: TransmuxMessage = {
         buffer,

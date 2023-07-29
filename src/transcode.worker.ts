@@ -61,10 +61,7 @@ onmessage = async (event: MessageEvent<TransmuxMessage>) => {
   console.timeEnd("transmux");
   // Read output file from FFmpeg filesystem as array buffer
   const data = ffmpeg.FS("readFile", outputFileName);
-  // await downloadBlob(
-  //   new Blob([data.buffer], { type: "video/mp2t" }),
-  //   outputFileName
-  // );
+
   // Delete output files from FFmpeg filesystem
   ffmpeg.FS("unlink", outputFileName);
   await putChunk(data, sequence, length, session);

@@ -2,28 +2,29 @@ import { Context, Config } from "https://deploy-preview-243--edge.netlify.app/";
 import type { Blobs } from "https://blobs-js.netlify.app/main.ts";
 
 export default async function handler(request: Request, context: Context) {
-  const url = new URL(request.url);
-  console.log(url.pathname);
-  const [_, _root, session, sequence] = url.pathname.split("/");
-
-  // TODO validate session and sequence
-
   if (request.method !== "GET") {
     return new Response(`Method ${request.method} not allowed`, {
       status: 405,
     });
   }
-  if (!session || !sequence) {
+
+  const pattern = new URLPattern({ pathname: "/chunks/:session/:sequence.ts" });
+
+  const result = pattern.exec(request.url);
+
+  const { session, sequence } = result?.pathname.groups ?? {};
+  console.log(result?.pathname.groups);
+
+  if (!session || !sequence || Number(sequence).toString() !== sequence) {
     return new Response("Not found", { status: 404 });
   }
+  console.log(`getting ${session}/${sequence}.ts`);
 
   const blobs: Blobs = context.blobs;
   if (!blobs) {
     console.log("no blobs");
     return new Response("No blobs", { status: 202 });
   }
-
-  console.log(`getting ${session}/${sequence}.ts`);
 
   try {
     const body = await blobs.get(`${session}/${sequence}.ts`);
