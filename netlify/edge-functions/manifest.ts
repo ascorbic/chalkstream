@@ -5,6 +5,7 @@ function manifestToPlaylist(json: Manifest, session: string): string {
   const sorted = json.chunks.sort((a, b) => a.sequence - b.sequence);
   return `#EXTM3U
 #EXT-X-VERSION:4
+#EXT-X-PLAYLIST-TYPE:EVENT
 #EXT-X-INDEPENDENT-SEGMENTS
 #EXT-X-TARGETDURATION:${json.targetDuration}
 #EXT-X-MEDIA-SEQUENCE:0
@@ -58,7 +59,7 @@ export default async function handler(request: Request, context: Context) {
     });
   } catch (e) {
     console.log(e);
-    return new Response(e.message, { status: 500 });
+    return new Response("Not found", { status: 404 });
   }
 }
 
