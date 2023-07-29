@@ -1,15 +1,8 @@
 import { Config, Context } from "https://deploy-preview-243--edge.netlify.app";
 
 export interface Manifest {
-  chunks: Array<{ sequence: number; duration: number }>;
+  chunks: Array<{ sequence: number; duration: number; digest: string }>;
   targetDuration: number;
-}
-
-async function getDigest(file: ArrayBuffer): Promise<string> {
-  const hash = await crypto.subtle.digest("SHA-256", file);
-  return Array.from(new Uint8Array(hash))
-    .map((b) => b.toString(16).padStart(2, "0"))
-    .join("");
 }
 
 export default async function handler(request: Request, context: Context) {
@@ -19,6 +12,16 @@ export default async function handler(request: Request, context: Context) {
     });
   }
 
+  const pattern = new URLPattern({ pathname: "/ingest/:session/:digest.ts" });
+
+  const result = pattern.exec(request.url);
+
+  const { session, digest } = result?.pathname.groups ?? {};
+
+  if (!session || !digest) {
+    return new Response("Not found", { status: 404 });
+  }
+
   if (!context.blobs) {
     console.log("no blobs");
     return new Response("No blobs", { status: 202 });
@@ -26,14 +29,13 @@ export default async function handler(request: Request, context: Context) {
   const blobs = context.blobs;
 
   const sequenceHeader = request.headers.get("x-sequence");
-  const session = request.headers.get("x-session");
   const duration = request.headers.get("x-duration");
 
   if (request.body === null) {
     return new Response("No body", { status: 400 });
   }
 
-  if (!session || !duration || (!sequenceHeader && sequenceHeader !== "0")) {
+  if (!duration || (!sequenceHeader && sequenceHeader !== "0")) {
     return new Response("Missing headers", { status: 400 });
   }
   const sequence = parseInt(sequenceHeader);
@@ -48,17 +50,14 @@ export default async function handler(request: Request, context: Context) {
     return new Response("Invalid duration", { status: 400 });
   }
 
-  const key = `${session}/${sequence}.ts`;
+  const key = `${session}/${digest}.ts`;
 
   const manifestKey = `${session}/manifest.json`;
 
   try {
     console.log(`setting ${key}`);
     const body = await request.arrayBuffer();
-    console.time("digest");
-    const digest = await getDigest(body);
-    console.timeEnd("digest");
-    console.log({ digest });
+
     await blobs.set(key, body, { ttl: 60 * 60 });
   } catch (e) {
     console.log(e);
@@ -76,7 +75,7 @@ export default async function handler(request: Request, context: Context) {
     console.log(e);
   }
 
-  config.chunks.push({ sequence, duration: parseInt(duration) });
+  config.chunks.push({ sequence, duration: Number(duration), digest });
 
   console.log({ config });
 
@@ -86,5 +85,5 @@ export default async function handler(request: Request, context: Context) {
 }
 
 export const config: Config = {
-  path: "/ingest",
+  path: "/ingest/*.ts",
 };

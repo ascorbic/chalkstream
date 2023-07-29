@@ -8,17 +8,17 @@ export default async function handler(request: Request, context: Context) {
     });
   }
 
-  const pattern = new URLPattern({ pathname: "/chunks/:session/:sequence.ts" });
+  const pattern = new URLPattern({ pathname: "/chunks/:session/:digest.ts" });
 
   const result = pattern.exec(request.url);
 
-  const { session, sequence } = result?.pathname.groups ?? {};
+  const { session, digest } = result?.pathname.groups ?? {};
   console.log(result?.pathname.groups);
 
-  if (!session || !sequence || Number(sequence).toString() !== sequence) {
+  if (!session || !digest) {
     return new Response("Not found", { status: 404 });
   }
-  console.log(`getting ${session}/${sequence}.ts`);
+  console.log(`getting ${session}/${digest}.ts`);
 
   const blobs: Blobs = context.blobs;
   if (!blobs) {
@@ -27,7 +27,7 @@ export default async function handler(request: Request, context: Context) {
   }
 
   try {
-    const body = await blobs.get(`${session}/${sequence}.ts`, {
+    const body = await blobs.get(`${session}/${digest}.ts`, {
       type: "arrayBuffer",
     });
     return new Response(body, {
@@ -36,6 +36,8 @@ export default async function handler(request: Request, context: Context) {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "GET",
         "Access-Control-Allow-Headers": "*",
+        "Cache-Control":
+          "public, max-age=31536000, immutable, s-maxage=31536000",
       },
     });
   } catch (e) {
@@ -46,4 +48,5 @@ export default async function handler(request: Request, context: Context) {
 
 export const config: Config = {
   path: "/chunks/*",
+  cache: "manual",
 };

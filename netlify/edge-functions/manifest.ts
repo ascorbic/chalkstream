@@ -14,7 +14,7 @@ ${sorted
     (chunk) =>
       `#EXT-X-DISCONTINUITY\n#EXTINF:${chunk.duration.toFixed(
         2
-      )},\n/chunks/${session}/${chunk.sequence}.ts`
+      )},\n/chunks/${session}/${chunk.digest}.ts`
   )
   .join("\n")}
 `;
@@ -55,6 +55,7 @@ export default async function handler(request: Request, context: Context) {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "GET",
         "Access-Control-Allow-Headers": "*",
+        "Cache-Control": "max-age=0, no-cache, no-store, must-revalidate",
       },
     });
   } catch (e) {

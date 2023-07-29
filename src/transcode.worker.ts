@@ -82,13 +82,12 @@ async function putChunk(
   const hash = await getDigest(chunk);
   console.timeEnd("hash");
   console.log("hash", hash);
-  return fetch("/ingest", {
+  return fetch(`/ingest/${session}/${hash}.ts`, {
     method: "PUT",
     body: chunk,
     headers: {
       "Content-Type": "video/mp2t",
       "X-Sequence": String(sequence),
-      "X-Session": session,
       "X-Duration": (duration / 1000).toFixed(2),
     },
   });
