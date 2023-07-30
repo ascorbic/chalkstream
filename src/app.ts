@@ -3,6 +3,12 @@ import { ulid } from "ulid";
 
 const timeslice = 6000;
 
+const status = document.getElementById("status") as HTMLDivElement;
+
+function setStatus(message: string) {
+  status.innerText = message;
+}
+
 const sessionIdInput = document.getElementById("session") as HTMLInputElement;
 const playbackLink = document.getElementById(
   "playback-link"
@@ -20,7 +26,10 @@ const worker = new Worker(new URL("./transcode.worker.ts", import.meta.url), {
 worker.onmessage = (event) => {
   console.log(event);
   if (event.data.error) {
+    setStatus("Error: " + event.data.error);
     console.error(event.data.error);
+  } else {
+    setStatus("Uploaded...");
   }
   playbackLink.hidden = false;
 };
@@ -43,6 +52,7 @@ const transcodeVideo = !mimeType?.endsWith("avc1.42E01E");
 // Create a function to initialize media recorder object
 async function initRecorder() {
   console.log("init recorder");
+  setStatus("Initializing camera");
   // Request access to user camera and microphone
   const stream = await navigator.mediaDevices.getUserMedia({
     video: true,
@@ -81,6 +91,7 @@ async function initRecorder() {
         transcodeVideo,
       };
       sequence++;
+      setStatus("Encoding...");
       // Send message to worker, and transfer ownership of buffer
       worker.postMessage(message, [buffer]);
       // If we're recording, start a new clip
@@ -93,6 +104,9 @@ async function initRecorder() {
     // Stop the recorder as soon as we have a chunk, so we start a new clip
     recorder.stop();
   });
+
+  setStatus("Ready");
+  document.getElementById("controls")!.hidden = false;
 }
 
 let isRecording = false;
@@ -102,6 +116,7 @@ const start = document.getElementById("start") as HTMLButtonElement;
 start.addEventListener("click", async () => {
   // If not recording, start the recorder
   if (!isRecording) {
+    setStatus("Recording...");
     // Start recorder with timeslice of 6 seconds
     recorder.start(timeslice);
 
@@ -109,6 +124,7 @@ start.addEventListener("click", async () => {
     isRecording = true;
     start.textContent = "Stop";
   } else {
+    setStatus("Stopped");
     // If recording, stop the recorder
     isRecording = false;
 
@@ -119,7 +135,7 @@ start.addEventListener("click", async () => {
 
     // Enable start state
     isRecording = false;
-    start.textContent = "Start";
+    start.textContent = "Start streaming";
   }
 });
 
