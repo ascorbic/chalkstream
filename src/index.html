@@ -4,86 +4,48 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Chalkstream</title>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        height: 100vh;
-        background-color: #f4f4f4;
-      }
-
-      video {
-        border: 4px solid #5c6bc0;
-        border-radius: 4px;
-        max-width: 100%;
-        margin-bottom: 20px;
-      }
-
-      #status {
-        font-size: 1.2em;
-        margin-bottom: 20px;
-        color: #333;
-      }
-
-      #controls {
-        text-align: center;
-      }
-
-      button {
-        padding: 10px 20px;
-        font-size: 1.2em;
-        color: white;
-        background-color: #5c6bc0;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-        margin-bottom: 20px;
-      }
-
-      button:hover {
-        background-color: #7986cb;
-      }
-
-      label {
-        display: flex;
-        flex-direction: column;
-        margin-bottom: 20px;
-      }
-
-      input[type="text"] {
-        margin-top: 10px;
-        padding: 10px;
-        font-size: 1em;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-      }
-
-      a {
-        color: #5c6bc0;
-        text-decoration: none;
-      }
-
-      a:hover {
-        text-decoration: underline;
-      }
-    </style>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="icon" href="favicon.png" />
   </head>
   <body>
-    <video id="camera" autoplay muted></video>
-    <div id="status">Loading...</div>
-
-    <div id="controls" hidden>
-      <button id="start">Start streaming</button>
-      <a id="playback-link" target="_blank" hidden>Playback link</a>
-      <label
-        >Session id<input type="text" id="session" value="session-id"
-      /></label>
+    <div id="container">
+      <div id="stream-container">
+        <div id="controls-container">
+          <a href="https://github.com/ascorbic/chalkstream"
+            ><img src="stream.png" alt="Stream" width="100" />
+            <h1>Chalkstream</h1></a
+          >
+          <div id="status">Loading...</div>
+          <div id="controls" hidden>
+            <button id="start">Start streaming</button>
+            <a id="playback-link" target="_blank" hidden>Playback link</a>
+            <label
+              >Session id<input type="text" id="session" value="session-id"
+            /></label>
+          </div>
+        </div>
+        <video id="camera" autoplay muted></video>
+      </div>
+      <div id="info">
+        <p>
+          This streams live from your browser. Chunks are converted to MPEG-TS
+          and then uploaded. If your browser doesn't natively support H.264
+          encoding, it needs to transcode the video which can be slow, and on
+          slow mahcines might prevent real-time streaming. This mainly means
+          Firefox.
+        </p>
+        <p>
+          Once the first chunk is uploaded a public stream link will become
+          visible. This link can be shared with others to watch the stream. The
+          stream uses HLS, which means it doesn't need a special streaming
+          server. Everything is powered by Netlify Edge Functions, with the
+          chunks stored in Netlify Blob Store.
+        </p>
+        <p>
+          All streams are public, though the URLs are hard to guess. All data is
+          kept for one hour before deletion.
+        </p>
+      </div>
     </div>
     <script type="module" src="app.ts"></script>
   </body>
