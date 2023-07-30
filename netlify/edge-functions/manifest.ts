@@ -6,22 +6,28 @@ function manifestToPlaylist(json: Manifest, session: string): string {
   const hasEnded = Date.now() - json.lastTimestamp > 20_000;
 
   const sorted = json.chunks.sort((a, b) => a.sequence - b.sequence);
-  return `#EXTM3U
-#EXT-X-VERSION:4
-#EXT-X-PLAYLIST-TYPE:${hasEnded ? "VOD" : "EVENT"}
-#EXT-X-INDEPENDENT-SEGMENTS
-#EXT-X-TARGETDURATION:${json.targetDuration}
-#EXT-X-MEDIA-SEQUENCE:0
-${sorted
-  .map(
-    (chunk) =>
-      `#EXT-X-DISCONTINUITY\n#EXTINF:${chunk.duration.toFixed(
-        2
-      )},\n/chunks/${session}/${chunk.digest}.ts`
-  )
-  .join("\n")}
-${hasEnded ? "#EXT-X-ENDLIST" : ""}
-`;
+  return [
+    "#EXTM3U",
+    "#EXT-X-VERSION:4",
+    `#EXT-X-PLAYLIST-TYPE:${hasEnded ? "VOD" : "EVENT"}`,
+    "#EXT-X-INDEPENDENT-SEGMENTS",
+    "#EXT-X-DISCONTINUITY-SEQUENCE",
+    `#EXT-X-PROGRAM-DATE-TIME:${new Date(json.firstTimestamp)
+      .toISOString()
+      .replace("Z", "+00:00")}`,
+    `#EXT-X-TARGETDURATION:${json.targetDuration}`,
+    "#EXT-X-MEDIA-SEQUENCE:0",
+
+    ...sorted.map(
+      (chunk) =>
+        `#EXT-X-DISCONTINUITY\n#EXTINF:${chunk.duration.toFixed(
+          2
+        )},\n/chunks/${session}/${chunk.digest}.ts`
+    ),
+    hasEnded ? "#EXT-X-ENDLIST" : "",
+  ]
+    .flat()
+    .join("\n");
 }
 
 const pattern = new URLPattern({ pathname: "/playlist/:session.m3u8" });

@@ -18,6 +18,7 @@ const worker = new Worker(new URL("./transcode.worker.ts", import.meta.url), {
 });
 
 worker.onmessage = (event) => {
+  console.log(event);
   if (event.data.error) {
     console.error(event.data.error);
   }

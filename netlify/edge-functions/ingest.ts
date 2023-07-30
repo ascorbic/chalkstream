@@ -4,6 +4,7 @@ export interface Manifest {
   chunks: Array<{ sequence: number; duration: number; digest: string }>;
   targetDuration: number;
   lastTimestamp: number;
+  firstTimestamp: number;
 }
 
 const pattern = new URLPattern({ pathname: "/ingest/:session/:digest.ts" });
@@ -68,6 +69,7 @@ export default async function handler(request: Request, context: Context) {
   let config: Manifest = {
     chunks: [],
     targetDuration: parseInt(duration) ?? 6,
+    firstTimestamp: Date.now(),
     lastTimestamp: Date.now(),
   };
 
