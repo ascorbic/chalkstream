@@ -8,9 +8,6 @@ dependencies:
   '@ffmpeg/ffmpeg':
     specifier: ^0.11.6
     version: 0.11.6
-  buffer:
-    specifier: ^6.0.3
-    version: 6.0.3
   netlify-identity-widget:
     specifier: ^1.9.2
     version: 1.9.2
@@ -25,6 +22,12 @@ dependencies:
     version: 8.3.0
 
 devDependencies:
+  '@types/netlify-identity-widget':
+    specifier: ^1.9.3
+    version: 1.9.3
+  buffer:
+    specifier: ^6.0.3
+    version: 6.0.3
   parcel:
     specifier: ^2.9.3
     version: 2.9.3
@@ -1099,6 +1102,10 @@ packages:
     engines: {node: '>=10.13.0'}
     dev: true
 
+  /@types/netlify-identity-widget@1.9.3:
+    resolution: {integrity: sha512-xAzPO2TM8Z+gVZ/3wXUM5WIKWEE0TG+uD6u/4Dq0tgA+bwrb+qyIqhlaIyJZcXN6MienvYxUH3DKUSYb8evfYA==}
+    dev: true
+
   /@videojs/http-streaming@3.0.2(video.js@8.3.0):
     resolution: {integrity: sha512-iSZkwTLGg3Rx78ypCCq/GsMME89ElNvU02xj7reCE2PlITMQjyYsER1w5AsySvT1A694u5yuSzEzLLGF1cL4pg==}
     engines: {node: '>=8', npm: '>=5'}
@@ -1185,7 +1192,7 @@ packages:
 
   /base64-js@1.5.1:
     resolution: {integrity: sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==}
-    dev: false
+    dev: true
 
   /boolbase@1.0.0:
     resolution: {integrity: sha512-JZOSA7Mo9sNGB8+UjSgzdLtokWAky1zbztM3WRLCbZ70/3cTANmQmOdR7y2g+J0e2WXywy1yS468tY+IruqEww==}
@@ -1214,7 +1221,7 @@ packages:
     dependencies:
       base64-js: 1.5.1
       ieee754: 1.2.1
-    dev: false
+    dev: true
 
   /callsites@3.1.0:
     resolution: {integrity: sha512-P8BjAsXvZS+VIDUI11hHCQEv74YT67YUi5JJFNWIqL235sBmjX4+qx9Muvls5ivyNENctx46xQLQ3aTuE7ssaQ==}
@@ -1475,7 +1482,7 @@ packages:
 
   /ieee754@1.2.1:
     resolution: {integrity: sha512-dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA==}
-    dev: false
+    dev: true
 
   /import-fresh@3.3.0:
     resolution: {integrity: sha512-veYYhQa+D1QBKznvhUHxb8faxlrwUnxseDAbAp457E0wLNio2bOSKnjYDhMj+YiAq61xrMGhQk9iXVk5FzgQMw==}

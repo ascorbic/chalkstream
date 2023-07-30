@@ -48,7 +48,7 @@ onmessage = async (event: MessageEvent<TransmuxMessage>) => {
     "-i",
     inputFileName,
     "-c:v",
-    // If it's already H.264, we can just copy the video stream
+    // If it's already H.264, we can just copy the video stream. Otherwise, we'll need to transcode it
     transcodeVideo ? "libx264" : "copy",
     "-c:a",
     // Transcode audio to AAC
