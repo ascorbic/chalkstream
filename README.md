@@ -20,21 +20,21 @@ When you load the broadcast page it generates a random stream ID, and once you s
 
 By default, anybody can create a stream, and anybody can view it. Chunks are retained for ten minutes. If you deploy the site yourself you should restrict access to prevent abuse. You can then increase the chunk retention time if you would like streams to be available for longer. Any completed stream can be viewed on-demand, automatically. A stream is considered complete if no chunks have been received for 30 seconds, but you can resume streaming with the same session id and it will continue where it left off.
 
+## Security
+
+All streams are public by default, and anyone can access the ingest endpoint. If you want to do anything serious you should restrict access. The playback endpoints require knowing the stream id, which is a hash of the session ID. Anyone who knows the session ID can record to that stream, so don't share it! It uses SHA-1 hashing, which is not cryptographically secure, but it's good enough for something with 10 minute retention. Don't use your stream to record state secrets or recite your wallet seed phrase.
+
 ### 1. Deploy the site
 
 <a href="https://app.netlify.com/start/deploy?repository=https://github.com/ascorbic/chalkstream"><img src="https://www.netlify.com/img/deploy/button.svg" alt="Deploy to Netlify"></a>
 
 Clone the repo, or use the button above to deploy the site to Netlify for free.
 
-### 2. Configure access
-
-Enable [Netlify Identity](https://docs.netlify.com/visitor-access/identity/#enable-identity-in-the-ui) and restrict broadcast access to logged-in users.
-
-### 3. Configure stream retention
+### 2. Configure stream retention
 
 The default retention is 10 minutes. You can change this by setting the `STREAM_RETENTION` environment variable to the number of minutes you want to retain chunks for. You can also set `STREAM_RETENTION` to `0` to retain chunks indefinitely.
 
-### 4. Customise the site, player etc
+### 3. Customise the site, player etc
 
 The pages are `src/index.html` (the broadcast page) and `src/play.html` (the playback page). It's all vanilla HTML, CSS and TypeScript, so you can customise it however you like. The edge functions are in `netlify/edge-functions`, where you can customise the HLS playlist generation if you need to.
 

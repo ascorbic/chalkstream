@@ -8,9 +8,6 @@ dependencies:
   '@ffmpeg/ffmpeg':
     specifier: ^0.11.6
     version: 0.11.6
-  netlify-identity-widget:
-    specifier: ^1.9.2
-    version: 1.9.2
   ulid:
     specifier: ^2.3.0
     version: 2.3.0
@@ -22,9 +19,6 @@ dependencies:
     version: 8.3.0
 
 devDependencies:
-  '@types/netlify-identity-widget':
-    specifier: ^1.9.3
-    version: 1.9.3
   buffer:
     specifier: ^6.0.3
     version: 6.0.3
@@ -1102,10 +1096,6 @@ packages:
     engines: {node: '>=10.13.0'}
     dev: true
 
-  /@types/netlify-identity-widget@1.9.3:
-    resolution: {integrity: sha512-xAzPO2TM8Z+gVZ/3wXUM5WIKWEE0TG+uD6u/4Dq0tgA+bwrb+qyIqhlaIyJZcXN6MienvYxUH3DKUSYb8evfYA==}
-    dev: true
-
   /@videojs/http-streaming@3.0.2(video.js@8.3.0):
     resolution: {integrity: sha512-iSZkwTLGg3Rx78ypCCq/GsMME89ElNvU02xj7reCE2PlITMQjyYsER1w5AsySvT1A694u5yuSzEzLLGF1cL4pg==}
     engines: {node: '>=8', npm: '>=5'}
@@ -1743,10 +1733,6 @@ packages:
     dependencies:
       '@babel/runtime': 7.22.6
       global: 4.4.0
-    dev: false
-
-  /netlify-identity-widget@1.9.2:
-    resolution: {integrity: sha512-IbS1JHhs7BflCCvp3C9f6tmNSZqbyBhZ4Gs5+Qxt4IlPybTOVv0PqJ4TAsA7uxh1R+oXOAmk0OOMAkEaPYeCtA==}
     dev: false
 
   /node-addon-api@4.3.0:

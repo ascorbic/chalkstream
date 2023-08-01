@@ -62,7 +62,7 @@ export default async function handler(request: Request, context: Context) {
     return new Response("Invalid duration", { status: 400 });
   }
 
-  const sessionKey = hashString(session);
+  const sessionKey = await hashString(session);
 
   const key = `${sessionKey}/${digest}.ts`;
 

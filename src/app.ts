@@ -21,8 +21,8 @@ const sessionIdInput = document.getElementById("session") as HTMLInputElement;
 const playbackLink = document.getElementById(
   "playback-link"
 ) as HTMLAnchorElement;
-sessionIdInput.oninput = () => {
-  playbackLink.href = `/play/${hashString(sessionIdInput.value)}`;
+sessionIdInput.oninput = async () => {
+  playbackLink.href = `/play/${await hashString(sessionIdInput.value)}`;
 };
 sessionIdInput.value = ulid();
 sessionIdInput.oninput(new Event("init"));
