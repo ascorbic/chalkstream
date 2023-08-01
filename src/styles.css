@@ -28,7 +28,7 @@ body {
 }
 
 video {
-  border: 4px solid #5c6bc0;
+  border: 4px solid rgb(97, 169, 103);
   border-radius: 4px;
   max-width: 100%;
   margin-bottom: 20px;
@@ -41,7 +41,7 @@ video {
 }
 
 h1 {
-  color: #5c6bc0;
+  color: rgb(97, 169, 103);
   margin-bottom: 20px;
   margin-top: 10px;
 }
@@ -74,7 +74,7 @@ button {
   padding: 10px 20px;
   font-size: 1.2em;
   color: white;
-  background-color: #5c6bc0;
+  background-color: rgb(97, 169, 103);
   border: none;
   border-radius: 5px;
   cursor: pointer;

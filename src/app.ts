@@ -9,12 +9,20 @@ function setStatus(message: string) {
   status.innerText = message;
 }
 
+async function hashString(id: string): Promise<string> {
+  const hash = await crypto.subtle.digest("SHA-1", new TextEncoder().encode(id));
+  return Array.from(new Uint8Array(hash))
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+}
+
+
 const sessionIdInput = document.getElementById("session") as HTMLInputElement;
 const playbackLink = document.getElementById(
   "playback-link"
 ) as HTMLAnchorElement;
 sessionIdInput.oninput = () => {
-  playbackLink.href = `/play/${sessionIdInput.value}`;
+  playbackLink.href = `/play/${hashString(sessionIdInput.value)}`;
 };
 sessionIdInput.value = ulid();
 sessionIdInput.oninput(new Event("init"));

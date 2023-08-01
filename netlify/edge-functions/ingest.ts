@@ -9,6 +9,16 @@ export interface Manifest {
 
 const pattern = new URLPattern({ pathname: "/ingest/:session/:digest.ts" });
 
+async function hashString(id: string): Promise<string> {
+  console.time("hash");
+  const hash = await crypto.subtle.digest("SHA-1", new TextEncoder().encode(id));
+  console.timeEnd("hash");
+  return Array.from(new Uint8Array(hash))
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+}
+
+
 export default async function handler(request: Request, context: Context) {
   if (request.method !== "PUT") {
     return new Response(`Method ${request.method} not allowed`, {
@@ -52,9 +62,11 @@ export default async function handler(request: Request, context: Context) {
     return new Response("Invalid duration", { status: 400 });
   }
 
-  const key = `${session}/${digest}.ts`;
+  const sessionKey = hashString(session);
 
-  const manifestKey = `${session}/manifest.json`;
+  const key = `${sessionKey}/${digest}.ts`;
+
+  const manifestKey = `${sessionKey}/manifest.json`;
 
   try {
     console.log(`setting ${key}`);
