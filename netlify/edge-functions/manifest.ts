@@ -2,7 +2,21 @@ import type { Context, Config } from "@netlify/edge-functions";
 import type { Blobs } from "https://unpkg.com/@netlify/blobs@2.0.0/dist/src/main.d.ts";
 import type { Manifest } from "./ingest.ts";
 
+const emptyPlaylist = `#EXTM3U
+#EXT-X-VERSION:4
+#EXT-X-PLAYLIST-TYPE:EVENT
+#EXT-X-INDEPENDENT-SEGMENTS
+#EXT-X-TARGETDURATION:6
+#EXT-X-MEDIA-SEQUENCE:0
+#EXTINF:6,
+/poster.ts`;
+
 function manifestToPlaylist(json: Manifest, session: string): string {
+  if (!json?.chunks?.length) {
+    console.log("no chunks");
+    return emptyPlaylist;
+  }
+
   // If there have been no chunks in the last 20 seconds, the stream has probably ended
   const hasEnded = Date.now() - json.lastTimestamp > 20_000;
 
@@ -31,15 +45,13 @@ function manifestToPlaylist(json: Manifest, session: string): string {
     .join("\n");
 }
 
-const pattern = new URLPattern({ pathname: "/playlist/:session.m3u8" });
-
 export default async function handler(
   request: Request,
   context: Context & { blobs?: Blobs }
 ) {
   const result = pattern.exec(request.url);
 
-  const { session } = result?.pathname.groups ?? {};
+  const { session } = context.params;
 
   if (!session) {
     return new Response("Not found", { status: 404 });
