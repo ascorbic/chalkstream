@@ -73,7 +73,7 @@ onmessage = async (event: MessageEvent<TransmuxMessage>) => {
     postMessage({});
   } else {
     console.log("Failed to upload chunk", { sequence, length, session });
-    postMessage({ error: res.text().catch(() => res.statusText) });
+    postMessage({ error: await res.text().catch(() => res.statusText) });
   }
 };
 

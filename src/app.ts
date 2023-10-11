@@ -6,19 +6,11 @@ function setStatus(message: string) {
   status.innerText = message;
 }
 
-async function hashString(id: string): Promise<string> {
-  const hash = await crypto.subtle.digest(
-    "SHA-1",
-    new TextEncoder().encode(id)
-  );
-  return Array.from(new Uint8Array(hash))
-    .map((b) => b.toString(16).padStart(2, "0"))
-    .join("");
-}
-
 const stream = new ChalkStream({
   onStatusChange: async (status) => {
     console.log("status", status);
+    setStatus(status);
+
     if (status === "ready") {
       document.getElementById("controls")!.hidden = false;
     }
@@ -26,7 +18,7 @@ const stream = new ChalkStream({
   videoElement: document.getElementById("camera") as HTMLVideoElement,
   onError: (error) => {
     console.error(error);
-    setStatus(error.message);
+    setStatus(error);
   },
 });
 
@@ -43,11 +35,10 @@ start.addEventListener("click", async () => {
   }
 });
 
-stream
-  .init()
-  .then(
-    () =>
-      ((
-        document.getElementById("playback-link") as HTMLAnchorElement
-      ).href = `/play/${stream.streamId}`)
-  );
+stream.init().then(() => {
+  const playback = document.getElementById(
+    "playback-link"
+  ) as HTMLAnchorElement;
+  playback.href = `/play/${stream.streamId}`;
+  playback.hidden = false;
+});

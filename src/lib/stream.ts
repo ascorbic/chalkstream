@@ -30,7 +30,7 @@ interface StreamOptions {
   /** Called when the status changes */
   onStatusChange?: (status: Status) => void;
 
-  onError?: (error: Error) => void;
+  onError?: (message: string) => void;
 }
 
 const timeslice = 6000;
@@ -64,7 +64,7 @@ export class ChalkStream {
 
   private _isRecording = false;
 
-  private _ingestServer?: string;
+  private _ingestServer: string;
 
   /**
    * Is the stream currently recording?
@@ -73,7 +73,7 @@ export class ChalkStream {
     return this._isRecording;
   }
 
-  private _onError?: (error: Error) => void;
+  private _onError?: (message: string) => void;
 
   private _onStatusChange?: (status: Status) => void;
 
@@ -93,7 +93,7 @@ export class ChalkStream {
     this.mediaStream = options.mediaStream;
     this.videoElement = options.videoElement;
     this.sessionId = options.sessionId ?? ulid();
-    this._ingestServer = options.ingestServer;
+    this._ingestServer = options.ingestServer ?? window.location.origin;
     this._onStatusChange = options.onStatusChange;
     this._onError = options.onError;
   }
@@ -105,6 +105,8 @@ export class ChalkStream {
     if (this._initted) {
       throw new Error("Cannot call init() more than once");
     }
+    this._initted = true;
+
     if (!this.mediaStream) {
       try {
         this.mediaStream = await navigator.mediaDevices.getUserMedia({
@@ -112,7 +114,7 @@ export class ChalkStream {
           audio: true,
         });
       } catch (e) {
-        this._onError?.(e as Error);
+        this._onError?.((e as Error).message);
         throw e;
       }
     }
@@ -125,7 +127,6 @@ export class ChalkStream {
     if (!this._recorder) {
       await this.initRecorder();
     }
-    this._initted = true;
   }
 
   /**
@@ -166,15 +167,14 @@ export class ChalkStream {
   }
 
   private setupWorker() {
-    const worker = new Worker(
+    this._worker = new Worker(
       new URL("./transcode.worker.ts", import.meta.url),
       {
         type: "module",
       }
     );
 
-    worker.onmessage = (event) => {
-      console.log(event);
+    this._worker.onmessage = (event) => {
       if (event.data.error) {
         this._onStatusChange?.("error");
         this._onError?.(event.data.error);
