@@ -46,11 +46,9 @@ function manifestToPlaylist(json: Manifest, session: string): string {
 }
 
 export default async function handler(
-  request: Request,
+  _request: Request,
   context: Context & { blobs?: Blobs }
 ) {
-  const result = pattern.exec(request.url);
-
   const { session } = context.params;
 
   if (!session) {

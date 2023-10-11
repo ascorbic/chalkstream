@@ -17,4 +17,8 @@ player.src({
   type: "application/x-mpegURL",
 });
 
-player.play()?.catch((e) => console.log(e));
+try {
+  player.play();
+} catch (e) {
+  console.log(e);
+}
