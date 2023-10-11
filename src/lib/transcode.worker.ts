@@ -6,6 +6,7 @@ export interface TransmuxMessage {
   length: number;
   session: string;
   transcodeVideo?: boolean;
+  ingestServer?: string;
 }
 
 let ffmpeg: FFmpeg;
@@ -33,7 +34,8 @@ import("@ffmpeg/ffmpeg").then(async ({ createFFmpeg }) => {
 
 // Received a job from the main thread
 onmessage = async (event: MessageEvent<TransmuxMessage>) => {
-  const { buffer, sequence, length, session, transcodeVideo } = event.data;
+  const { buffer, sequence, length, session, transcodeVideo, ingestServer } =
+    event.data;
 
   const inputFileName = `${sequence + 1}.webm`;
   const outputFileName = `${sequence + 1}.ts`;
@@ -65,7 +67,7 @@ onmessage = async (event: MessageEvent<TransmuxMessage>) => {
 
   // Delete output files from FFmpeg filesystem
   ffmpeg.FS("unlink", outputFileName);
-  const res = await putChunk(data, sequence, length, session);
+  const res = await putChunk(data, sequence, length, session, ingestServer);
   if (res.ok) {
     console.log("Uploaded chunk", { sequence, length, session });
     postMessage({});
@@ -79,13 +81,14 @@ async function putChunk(
   chunk: Uint8Array,
   sequence: number,
   duration: number,
-  session: string
+  session: string,
+  ingestServer?: string
 ) {
   console.time("hash");
   const hash = await getDigest(chunk);
   console.timeEnd("hash");
   console.log("Uploading chunk", { sequence, duration, session, hash });
-  return fetch(`/ingest/${session}/${hash}.ts`, {
+  return fetch(new URL(`/ingest/${session}/${hash}.ts`, ingestServer), {
     method: "PUT",
     body: chunk,
     headers: {

@@ -1,4 +1,5 @@
-import { Context, Config } from "https://deploy-preview-243--edge.netlify.app/";
+import type { Context, Config } from "@netlify/edge-functions";
+import type { Blobs } from "https://unpkg.com/@netlify/blobs@2.0.0/dist/src/main.d.ts";
 import type { Manifest } from "./ingest.ts";
 
 function manifestToPlaylist(json: Manifest, session: string): string {
@@ -32,13 +33,10 @@ function manifestToPlaylist(json: Manifest, session: string): string {
 
 const pattern = new URLPattern({ pathname: "/playlist/:session.m3u8" });
 
-export default async function handler(request: Request, context: Context) {
-  if (request.method !== "GET") {
-    return new Response(`Method ${request.method} not allowed`, {
-      status: 405,
-    });
-  }
-
+export default async function handler(
+  request: Request,
+  context: Context & { blobs?: Blobs }
+) {
   const result = pattern.exec(request.url);
 
   const { session } = result?.pathname.groups ?? {};
@@ -74,5 +72,6 @@ export default async function handler(request: Request, context: Context) {
 }
 
 export const config: Config = {
-  path: "/playlist/*.m3u8",
+  method: "GET",
+  path: "/playlist/:session.m3u8",
 };

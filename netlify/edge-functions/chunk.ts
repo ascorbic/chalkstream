@@ -1,17 +1,11 @@
-import { Context, Config } from "https://deploy-preview-243--edge.netlify.app/";
+import type { Context, Config } from "@netlify/edge-functions";
+import type { Blobs } from "https://unpkg.com/@netlify/blobs@2.0.0/dist/src/main.d.ts";
 
-const pattern = new URLPattern({ pathname: "/chunks/:session/:digest.ts" });
-
-export default async function handler(request: Request, context: Context) {
-  if (request.method !== "GET") {
-    return new Response(`Method ${request.method} not allowed`, {
-      status: 405,
-    });
-  }
-
-  const result = pattern.exec(request.url);
-
-  const { session, digest } = result?.pathname.groups ?? {};
+export default async function handler(
+  _request: Request,
+  context: Context & { blobs?: Blobs }
+) {
+  const { session, digest } = context.params;
 
   if (!session || !digest) {
     return new Response("Not found", { status: 404 });
@@ -27,8 +21,12 @@ export default async function handler(request: Request, context: Context) {
     const body = await context.blobs.get(`${session}/${digest}.ts`, {
       type: "arrayBuffer",
     });
+    if (!body) {
+      return new Response("Not found", { status: 404 });
+    }
     return new Response(body, {
       headers: {
+        "Content-Length": body.byteLength.toString(),
         "Content-Type": "video/mp2t",
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "GET",
@@ -44,6 +42,7 @@ export default async function handler(request: Request, context: Context) {
 }
 
 export const config: Config = {
-  path: "/chunks/*",
+  method: "GET",
+  path: "/chunks/:session/:digest.ts",
   cache: "manual",
 };
