@@ -19,14 +19,13 @@ export default async function handler(
 
   try {
     const body = await context.blobs.get(`${session}/${digest}.ts`, {
-      type: "arrayBuffer",
+      type: "stream",
     });
     if (!body) {
       return new Response("Not found", { status: 404 });
     }
     return new Response(body, {
       headers: {
-        "Content-Length": body.byteLength.toString(),
         "Content-Type": "video/mp2t",
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "GET",

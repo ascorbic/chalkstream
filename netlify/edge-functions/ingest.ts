@@ -81,8 +81,11 @@ export default async function handler(
   };
 
   try {
-    config = JSON.parse(await blobs.get(manifestKey));
-    config.lastTimestamp = Date.now();
+    const manifest = await blobs.get(manifestKey, { type: "json" });
+    if (manifest) {
+      config = manifest;
+      config.lastTimestamp = Date.now();
+    }
   } catch (e) {
     console.log(e);
   }
