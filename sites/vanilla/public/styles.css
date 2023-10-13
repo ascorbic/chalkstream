@@ -1,0 +1,117 @@
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  margin: 0;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #f4f4f4;
+}
+
+#container {
+  display: grid;
+  grid-template-areas: 
+    "logo"
+    "video"
+    "controls"
+    "info";
+  grid-template-columns: 1fr;
+  grid-gap: 20px;
+  align-items: start;
+  justify-items: center;
+  max-width: 900px;
+  width: 100%;
+}
+
+#logo {
+  grid-area: logo;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#controls-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  grid-area: controls;
+}
+
+video {
+  grid-area: video;
+  border: 4px solid rgb(97, 169, 103);
+  border-radius: 4px;
+  max-width: 100%;
+}
+
+#status {
+  font-size: 1.2em;
+  color: #333;
+}
+
+h1 {
+  color: rgb(97, 169, 103);
+  margin: 10px 0;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 1.2em;
+  color: white;
+  background-color: rgb(97, 169, 103);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-bottom: 20px;
+}
+
+button:hover {
+  background-color: rgb(137, 189, 133);
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+input[type="text"] {
+  margin-top: 10px;
+  padding: 10px;
+  font-size: 1em;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+a {
+  color: rgb(97, 169, 103);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+#info {
+  grid-area: info;
+  padding: 20px;
+  border-top: 1px solid #ccc;
+}
+
+#info h2 {
+  color: rgb(97, 169, 103);
+  margin-bottom: 20px;
+}
+
+/* Breakpoints for larger screens */
+@media screen and (min-width: 768px) {
+  #container {
+    grid-template-areas: 
+    "logo video"
+    "controls video"
+    "info info";
+    grid-template-columns: min-content auto;
+  }
+}

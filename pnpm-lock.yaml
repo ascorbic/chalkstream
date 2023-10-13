@@ -73,6 +73,19 @@ importers:
         specifier: ^5.2.2
         version: 5.2.2
 
+  sites/vanilla:
+    dependencies:
+      chalkstream:
+        specifier: workspace:^
+        version: link:../../packages/chalkstream
+      video.js:
+        specifier: ^8.6.0
+        version: 8.6.0
+    devDependencies:
+      '@netlify/edge-functions':
+        specifier: ^2.2.0
+        version: 2.2.0
+
 packages:
 
   /@babel/code-frame@7.22.5:

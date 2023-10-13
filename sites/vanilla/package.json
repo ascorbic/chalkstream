@@ -1,0 +1,19 @@
+{
+  "name": "chalkstream-vanilla-demo",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "scripts": {
+    "generate-poster": "ffmpeg -loop 1 -i static/poster.png -c:v libx264 -t 6 -pix_fmt yuv420p -vf \"scale=640:480\" -f mpegts static/poster.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@netlify/edge-functions": "^2.2.0"
+  },
+  "dependencies": {
+    "chalkstream": "workspace:^",
+    "video.js": "^8.6.0"
+  }
+}
