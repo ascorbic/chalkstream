@@ -35,6 +35,10 @@ export default async function handler(
     return new Response("No blobs", { status: 202 });
   }
 
+  const expiration = Number(
+    Netlify.env.get("CHALKSTREAM_RETENTION") ?? 60 * 10
+  );
+
   const sequenceHeader = request.headers.get("x-sequence");
   const duration = request.headers.get("x-duration");
 
@@ -67,7 +71,7 @@ export default async function handler(
     console.log(`setting ${key}`);
     const body = await request.arrayBuffer();
 
-    await blobs.set(key, body, { expiration: 60 * 60 });
+    await blobs.set(key, body, { expiration });
   } catch (e) {
     console.log(e);
     return new Response(e.message, { status: 500 });
@@ -94,7 +98,7 @@ export default async function handler(
 
   console.log({ config });
 
-  await blobs.setJSON(manifestKey, config, { expiration: 60 * 60 });
+  await blobs.setJSON(manifestKey, config, { expiration });
 
   return new Response("OK", { status: 202 });
 }

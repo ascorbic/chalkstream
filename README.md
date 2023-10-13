@@ -32,7 +32,7 @@ Clone the repo, or use the button above to deploy the site to Netlify for free.
 
 ### 2. Configure stream retention
 
-The default retention is 10 minutes. You can change this by setting the `STREAM_RETENTION` environment variable to the number of minutes you want to retain chunks for. You can also set `STREAM_RETENTION` to `0` to retain chunks indefinitely.
+The default retention is 10 minutes. You can change this by setting the `CHALKSTREAM_RETENTION` environment variable to the number of minutes you want to retain chunks for. You can also set `CHALKSTREAM_RETENTION` to `0` to retain chunks indefinitely.
 
 ### 3. Customise the site, player etc
 
