@@ -5,11 +5,40 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Chalkstream</title>
+  <link href="https://cdn.jsdelivr.net/npm/video.js/dist/video-js.css" rel="stylesheet" />
+  <link rel="icon" href="favicon.png" />
 </head>
 
 <body>
   <video id="video" class="video-js" controls data-setup="{}" width="640" height="480"></video>
-  <script type="module" src="play.ts"></script>
+  <script type="module">
+
+    import videojs from "https://esm.sh/video.js@8.6.1";
+
+    const player = videojs("video");
+    if (!player) {
+      console.log("no player");
+    }
+
+    const [, , sessionid] = window.location.pathname.split("/");
+
+    if (!sessionid) {
+      console.log("no sessionid");
+    }
+
+    player.src({
+      src: `/playlist/${sessionid}.m3u8`,
+      type: "application/x-mpegURL",
+    });
+
+    try {
+      player.play();
+    } catch (e) {
+      console.log(e);
+    }
+
+
+  </script>
 </body>
 
 </html>
