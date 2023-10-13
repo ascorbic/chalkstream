@@ -18,7 +18,8 @@
     "./edge": "./edge/mod.ts"
   },
   "scripts": {
-    "build": "tsup"
+    "build": "tsup",
+    "prepublish": "publint"
   },
   "keywords": [],
   "author": "",

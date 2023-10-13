@@ -2,8 +2,10 @@
   "name": "chalkstream-ws",
   "version": "1.0.0",
   "description": "",
+  "private": true,
   "scripts": {
-    "build": "pnpm run -r build"
+    "build": "pnpm run -r build",
+    "build:packages": "pnpm run -r --filter=chalkstream build"
   },
   "keywords": [],
   "author": "Matt Kane",

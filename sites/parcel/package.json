@@ -2,6 +2,7 @@
   "name": "chalkstream-parcel-demo",
   "version": "1.0.0",
   "description": "",
+  "private": true,
   "scripts": {
     "dev": "NODE_ENV=production parcel src/*.html",
     "build": "parcel build src/*.html && cp -r static/* dist",

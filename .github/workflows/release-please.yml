@@ -1,0 +1,46 @@
+on:
+  push:
+    branches:
+      - main
+name: release-please
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      id-token: write
+    steps:
+      - uses: navikt/github-app-token-generator@v1
+        id: get-token
+        with:
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          app-id: ${{ secrets.APP_ID }}
+      - uses: google-github-actions/release-please-action@v3
+        id: release
+        with:
+          release-type: node
+          command: manifest
+          token: ${{ steps.get-token.outputs.token }}
+      - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
+        with:
+          version: latest
+      - uses: actions/setup-node@v3
+        with:
+          cache: "pnpm"
+          check-latest: true
+          registry-url: "https://registry.npmjs.org"
+      - name: Install dependencies
+        run: pnpm install
+      - run: pnpm build:packages
+        if: ${{ steps.release.outputs.releases_created }}
+      - name: Authenticate pnpm
+        run: pnpm config set '//registry.npmjs.org/:_authToken' "${NPM_AUTH_TOKEN}"
+        if: ${{ steps.release.outputs.releases_created }}
+        env:
+          NPM_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+      - run: pnpm -r publish
+        env:
+          NPM_CONFIG_PROVENANCE: true
+        if: ${{ steps.release.outputs.releases_created }}
