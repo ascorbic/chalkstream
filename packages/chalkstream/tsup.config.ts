@@ -5,5 +5,5 @@ export default defineConfig({
   format: ["cjs", "esm"],
   target: "chrome117",
   dts: true,
-  esbuildPlugins: [inlineWorkerPlugin({ workerOptions: {} })],
+  esbuildPlugins: [inlineWorkerPlugin()],
 });

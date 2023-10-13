@@ -1,6 +1,6 @@
 {
   "name": "chalkstream",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -8,13 +8,11 @@
     ".": {
       "require": {
         "types": "./dist/index.d.ts",
-        "import": "./dist/index.js"
+        "default": "./dist/index.js"
       },
       "import": {
         "types": "./dist/index.d.mts",
-        "path": "./dist/index.mjs",
-        "deno": "./edge/mod.ts",
-        "netlify": "./edge/mod.ts"
+        "default": "./dist/index.mjs"
       }
     },
     "./edge": "./edge/mod.ts"
@@ -27,7 +25,7 @@
   "license": "MIT",
   "devDependencies": {
     "@ffmpeg/ffmpeg": "^0.11.6",
-    "esbuild-plugin-inline-worker": "github:ascorbic/esbuild-plugin-inline-worker#worker-options",
+    "esbuild-plugin-inline-worker": "^0.1.1",
     "publint": "^0.2.4",
     "tsup": "^7.2.0",
     "typescript": "^5.2.2",

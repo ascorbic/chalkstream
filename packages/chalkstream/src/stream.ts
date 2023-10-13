@@ -106,8 +106,11 @@ export class ChalkStream {
    */
   public async init() {
     if (!crossOriginIsolated) {
-      throw new Error(`Current page is not cross-origin isolated.
-See https://github.com/ascorbic/chalkstream#cross-origin-isolation for details`);
+      console.error(`⚠️ Error: Cross-Origin Isolation is not enabled on this page, which is required for the proper functioning of Chalkstream ⚠️
+
+See https://github.com/ascorbic/chalkstream#cross-origin-isolation for details
+`);
+      throw new Error(`Page is not cross-origin isolated`);
     }
     if (this._initted) {
       throw new Error("Cannot call init() more than once");
