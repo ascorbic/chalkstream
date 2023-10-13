@@ -1,6 +1,7 @@
-import { ChalkStream } from "./lib/stream";
+import { ChalkStream } from "chalkstream";
 
 const status = document.getElementById("status") as HTMLDivElement;
+console.log({ crossOriginIsolated });
 
 function setStatus(message: string) {
   status.innerText = message;

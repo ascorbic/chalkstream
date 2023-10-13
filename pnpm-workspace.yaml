@@ -1,0 +1,4 @@
+name: chalkstream-ws
+packages:
+  - "packages/*"
+  - "sites/*"

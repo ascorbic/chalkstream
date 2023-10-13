@@ -1,25 +1,19 @@
 {
-  "name": "chalkstream",
+  "name": "chalkstream-ws",
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "dev": "NODE_ENV=production parcel src/*.html",
-    "build": "parcel build src/*.html && cp -r static/* dist",
-    "generate-poster": "ffmpeg -loop 1 -i static/poster.png -c:v libx264 -t 6 -pix_fmt yuv420p -vf \"scale=640:480\" -f mpegts static/poster.ts"
+    "build": "pnpm run -r build"
   },
   "keywords": [],
-  "author": "",
+  "author": "Matt Kane",
   "license": "MIT",
   "devDependencies": {
-    "buffer": "^6.0.3",
-    "parcel": "^2.9.3",
+    "buffer": "^5.5.0||^6.0.0",
+    "crypto-browserify": "^3.12.0",
+    "events": "^3.1.0",
     "process": "^0.11.10",
-    "typescript": "^5.2.2"
-  },
-  "dependencies": {
-    "@ffmpeg/ffmpeg": "^0.11.6",
-    "ulid": "^2.3.0",
-    "urlpattern-polyfill": "^9.0.0",
-    "video.js": "^8.3.0"
+    "stream-browserify": "^3.0.0",
+    "string_decoder": "^1.3.0"
   }
 }

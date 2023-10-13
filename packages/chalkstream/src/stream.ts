@@ -1,6 +1,9 @@
 import type { TransmuxMessage } from "./transcode.worker";
 import { ulid } from "ulid";
 
+// @ts-expect-error This is inlined by tsup
+import TranscodeWorker from "./transcode.worker";
+
 export type Status =
   | "initializing"
   | "ready"
@@ -10,7 +13,7 @@ export type Status =
   | "stopped"
   | "error";
 
-interface StreamOptions {
+export interface StreamOptions {
   /** The element used to display the user's camera */
   videoElement?: HTMLVideoElement;
   /**
@@ -167,12 +170,7 @@ export class ChalkStream {
   }
 
   private setupWorker() {
-    this._worker = new Worker(
-      new URL("./transcode.worker.ts", import.meta.url),
-      {
-        type: "module",
-      }
-    );
+    this._worker = TranscodeWorker() as Worker;
 
     this._worker.onmessage = (event) => {
       if (event.data.error) {
