@@ -6,10 +6,18 @@
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "require": "./dist/index.js",
-      "import": "./dist/index.mjs"
-    }
+      "require": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      },
+      "import": {
+        "types": "./dist/index.d.mts",
+        "path": "./dist/index.mjs",
+        "deno": "./edge/mod.ts",
+        "netlify": "./edge/mod.ts"
+      }
+    },
+    "./edge": "./edge/mod.ts"
   },
   "scripts": {
     "build": "tsup"

@@ -105,6 +105,10 @@ export class ChalkStream {
    * Initialises the recorder and stream. This must be called before start()
    */
   public async init() {
+    if (!crossOriginIsolated) {
+      throw new Error(`Current page is not cross-origin isolated.
+See https://github.com/ascorbic/chalkstream#cross-origin-isolation for details`);
+    }
     if (this._initted) {
       throw new Error("Cannot call init() more than once");
     }
