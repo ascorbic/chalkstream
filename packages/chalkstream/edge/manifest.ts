@@ -4,15 +4,12 @@ import type { Manifest } from "./ingest.ts";
 
 const emptyPlaylist = (poster: string) => `#EXTM3U
 #EXT-X-VERSION:4
-#EXT-X-PLAYLIST-TYPE:EVENT
 #EXT-X-INDEPENDENT-SEGMENTS
 #EXT-X-DISCONTINUITY-SEQUENCE
-#EXT-X-PROGRAM-DATE-TIME:${new Date(json.firstTimestamp)
-  .toISOString()
-  .replace("Z", "+00:00")}
+#EXT-X-PROGRAM-DATE-TIME:${new Date().toISOString().replace("Z", "+00:00")}
 #EXT-X-TARGETDURATION:6
 #EXT-X-MEDIA-SEQUENCE:0
-#EXTINF:6,
+#EXTINF:6
 ${poster}`;
 
 function manifestToPlaylist(json: Manifest, session: string): string {
