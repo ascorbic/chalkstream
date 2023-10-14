@@ -9,7 +9,8 @@
     "build:client": "vite build",
     "build:prerender": "impala prerender",
     "build": "npm run build:client && npm run build:server && npm run build:prerender",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "generate-poster": "ffmpeg -loop 1 -i public/poster.png -c:v libx264 -t 6 -pix_fmt yuv420p -vf \"scale=640:480\" -f mpegts public/poster.ts"
   },
   "dependencies": {
     "@impalajs/core": "latest",
