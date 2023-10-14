@@ -1,5 +1,5 @@
 import type { Context, Config } from "@netlify/edge-functions";
-import type { Blobs } from "https://unpkg.com/@netlify/blobs@2.0.0/dist/src/main.d.ts";
+import type { Blobs } from "https://unpkg.com/@netlify/blobs@2.2.0/dist/main.d.ts";
 
 export default async function handler(
   _request: Request,
