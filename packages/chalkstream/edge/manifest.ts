@@ -2,20 +2,25 @@ import type { Context, Config } from "@netlify/edge-functions";
 import type { Blobs } from "https://unpkg.com/@netlify/blobs@2.2.0/dist/main.d.ts";
 import type { Manifest } from "./ingest.ts";
 
-const emptyPlaylist = (poster: string) => `#EXTM3U
+const epoch = Date.now();
+
+const emptyPlaylist = (poster: string, sequence: number) => `#EXTM3U
 #EXT-X-VERSION:4
 #EXT-X-INDEPENDENT-SEGMENTS
 #EXT-X-DISCONTINUITY-SEQUENCE
 #EXT-X-PROGRAM-DATE-TIME:${new Date().toISOString().replace("Z", "+00:00")}
 #EXT-X-TARGETDURATION:6
-#EXT-X-MEDIA-SEQUENCE:0
+#EXT-X-MEDIA-SEQUENCE:${sequence}
+#EXT-X-DISCONTINUITY
 #EXTINF:6
 ${poster}`;
 
 function manifestToPlaylist(json: Manifest, session: string): string {
   if (!json?.chunks?.length) {
+    const sequence = Math.round((Date.now() - epoch) / 6000) - 1;
+
     const poster = `/poster.ts?id=${encodeURIComponent(session)}`;
-    return emptyPlaylist(poster);
+    return emptyPlaylist(poster, sequence);
   }
 
   // If there have been no chunks in the last 20 seconds, the stream has probably ended
@@ -32,7 +37,7 @@ function manifestToPlaylist(json: Manifest, session: string): string {
       .toISOString()
       .replace("Z", "+00:00")}`,
     `#EXT-X-TARGETDURATION:${json.targetDuration}`,
-    "#EXT-X-MEDIA-SEQUENCE:0",
+    `#EXT-X-MEDIA-SEQUENCE:1`,
 
     ...sorted.map(
       (chunk) =>
