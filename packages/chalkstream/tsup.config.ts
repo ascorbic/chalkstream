@@ -6,4 +6,6 @@ export default defineConfig({
   target: "chrome117",
   dts: true,
   esbuildPlugins: [inlineWorkerPlugin()],
+  clean: true,
+  platform: "browser",
 });

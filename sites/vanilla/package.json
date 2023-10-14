@@ -4,6 +4,7 @@
   "description": "",
   "private": true,
   "scripts": {
+    "build": "rm -rf ./public/lib && cp -r ./node_modules/chalkstream/ ./public/lib",
     "generate-poster": "ffmpeg -loop 1 -i static/poster.png -c:v libx264 -t 6 -pix_fmt yuv420p -vf \"scale=640:480\" -f mpegts static/poster.ts"
   },
   "keywords": [],
