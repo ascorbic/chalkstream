@@ -50,23 +50,20 @@
 
     const status = document.getElementById("status");
 
-    function setStatus(message) {
-      status.innerText = message;
-    }
 
     const stream = new ChalkStream({
-      onStatusChange: async (status) => {
-        console.log("status", status);
-        setStatus(status);
-
-        if (status === "ready") {
-          document.getElementById("controls").hidden = false;
-        }
+      onReady: async (streamId) => {
+        document.getElementById("controls").hidden = false;
+        const playback = document.getElementById(
+          "playback-link"
+        );
+        playback.href = `/play/${streamId}`;
+        playback.hidden = false;
       },
       videoElement: document.getElementById("camera"),
       onError: (error) => {
         console.error(error);
-        setStatus(error);
+        status.innerText = error;
       },
     });
 
@@ -78,18 +75,11 @@
         start.textContent = "Stop";
       } else {
         stream.stop();
-        setStatus("Stopped");
         start.textContent = "Start streaming";
       }
     });
 
-    stream.init().then(() => {
-      const playback = document.getElementById(
-        "playback-link"
-      );
-      playback.href = `/play/${stream.streamId}`;
-      playback.hidden = false;
-    });
+    stream.init();
   </script>
 </body>
 

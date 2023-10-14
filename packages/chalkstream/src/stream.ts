@@ -1,17 +1,8 @@
-import type { TransmuxMessage } from "./transcode.worker";
+import type { TransmuxMessage, TransmuxResponse } from "./transcode.worker";
 import { ulid } from "ulidx";
 
 // @ts-expect-error This is inlined by tsup
 import TranscodeWorker from "./transcode.worker";
-
-export type Status =
-  | "initializing"
-  | "ready"
-  | "encoding"
-  | "streamready"
-  | "streaming"
-  | "stopped"
-  | "error";
 
 export interface StreamOptions {
   /** The element used to display the user's camera */
@@ -27,16 +18,55 @@ export interface StreamOptions {
    */
   ingestServer?: string;
 
-  /** The session id for this stream. If undefined will be generated */
+  /** The session id for this stream. If undefined will be randomly generated */
   sessionId?: string;
 
-  /** Called when the status changes */
-  onStatusChange?: (status: Status) => void;
+  /**
+   * Chunk length in seconds. Defaults to 6 seconds.
+   */
+  chunkLength?: number;
 
+  /**
+   * Called when the worker is has loaded and is ready to start encoding\
+   *
+   * @param streamId The stream id, which can be used to generate the HLS stream URL
+   */
+  onReady?: (streamId: string) => void;
+
+  /**
+   * Called when streaming has started
+   * @param streamId The stream id, which can be used to generate the HLS stream URL
+   */
+  onStreamStart?: (streamId: string) => void;
+
+  /**
+   * Called when streaming has stopped
+   * @param streamId The stream id, which can be used to generate the HLS stream URL
+   */
+  onStreamStop?: (streamId: string) => void;
+
+  /**
+   * Called when the worker has finished encoding a chunk
+   *
+   * @param sequence The sequence number of the chunk
+   * @param length The length of the chunk in bytes
+   */
+  onChunkEncoded?: (sequence: number, length: number) => void;
+
+  /**
+   * Called when the worker has finished uploading a chunk
+   *
+   * @param sequence The sequence number of the chunk
+   * @param length The length of the chunk in bytes
+   */
+  onChunkUploaded?: (sequence: number, length: number) => void;
+
+  /**
+   * Called on error
+   * @param message The error message
+   */
   onError?: (message: string) => void;
 }
-
-const timeslice = 6000;
 
 // Preferred mimetypes, in descending order
 const CODECS = [
@@ -69,6 +99,8 @@ export class ChalkStream {
 
   private _ingestServer: string;
 
+  private _timeslice = 6000;
+
   /**
    * Is the stream currently recording?
    */
@@ -78,7 +110,15 @@ export class ChalkStream {
 
   private _onError?: (message: string) => void;
 
-  private _onStatusChange?: (status: Status) => void;
+  private _onReady?: (streamId: string) => void;
+
+  private _onChunkEncoded?: (sequence: number, length: number) => void;
+
+  private _onChunkUploaded?: (sequence: number, length: number) => void;
+
+  private _onStreamStart?: (streamId: string) => void;
+
+  private _onStreamStop?: (streamId: string) => void;
 
   private _worker?: Worker;
 
@@ -100,8 +140,13 @@ export class ChalkStream {
       options.ingestServer ??
       globalThis.window?.location.origin ??
       "http://localhost:8888";
-    this._onStatusChange = options.onStatusChange;
     this._onError = options.onError;
+    this._onReady = options.onReady;
+    this._onChunkEncoded = options.onChunkEncoded;
+    this._onChunkUploaded = options.onChunkUploaded;
+    this._onStreamStart = options.onStreamStart;
+    this._onStreamStop = options.onStreamStop;
+    this._timeslice = options.chunkLength ?? 6000;
   }
 
   /**
@@ -164,9 +209,10 @@ See https://github.com/ascorbic/chalkstream#cross-origin-isolation for details
     if (this.isRecording) {
       return;
     }
-    this._onStatusChange?.("streaming");
     // Start recorder with timeslice of 6 seconds
-    this._recorder?.start(timeslice);
+    this._recorder?.start(this._timeslice);
+
+    this._onStreamStart?.(this.streamId);
 
     this._isRecording = true;
   }
@@ -176,20 +222,28 @@ See https://github.com/ascorbic/chalkstream#cross-origin-isolation for details
    */
   public stop() {
     this._recorder?.stop();
-    this._onStatusChange?.("stopped");
     this._isRecording = false;
+    this._onStreamStop?.(this.streamId);
   }
 
   private setupWorker() {
     this._worker = TranscodeWorker() as Worker;
 
-    this._worker.onmessage = (event) => {
-      if (event.data.error) {
-        this._onStatusChange?.("error");
-        this._onError?.(event.data.error);
-        console.error(event.data.error);
-      } else {
-        this._onStatusChange?.("streamready");
+    this._worker.onmessage = (event: MessageEvent<TransmuxResponse>) => {
+      console.log("[chalkstream] Received message from worker", event.data);
+      switch (event.data.type) {
+        case "ready":
+          this._onReady?.(this.streamId);
+          return;
+        case "encoded":
+          this._onChunkEncoded?.(event.data.sequence, event.data.length);
+          return;
+        case "uploaded":
+          this._onChunkUploaded?.(event.data.sequence, event.data.length);
+          return;
+        case "error":
+          this._onError?.(event.data.error);
+          return;
       }
     };
   }
@@ -207,7 +261,6 @@ See https://github.com/ascorbic/chalkstream#cross-origin-isolation for details
       );
     }
 
-    this._onStatusChange?.("initializing");
     // Request access to user camera and microphone
     const stream = await navigator.mediaDevices.getUserMedia({
       video: true,
@@ -241,18 +294,17 @@ See https://github.com/ascorbic/chalkstream#cross-origin-isolation for details
         const message: TransmuxMessage = {
           buffer,
           sequence,
-          length: timeslice,
+          length: this._timeslice,
           session: this.sessionId!,
           transcodeVideo: this._transcodeVideo,
           ingestServer: this._ingestServer,
         };
         sequence++;
-        this._onStatusChange?.("encoding");
         // Send message to worker, and transfer ownership of buffer
         this._worker?.postMessage(message, [buffer]);
         // If we're recording, start a new clip
         if (this._isRecording) {
-          this._recorder?.start(timeslice);
+          this._recorder?.start(this._timeslice);
         }
 
         return;
@@ -260,6 +312,5 @@ See https://github.com/ascorbic/chalkstream#cross-origin-isolation for details
       // Stop the recorder as soon as we have a chunk to force a new clip
       this._recorder!.stop();
     });
-    this._onStatusChange?.("ready");
   }
 }

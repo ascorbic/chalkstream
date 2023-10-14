@@ -1,15 +1,19 @@
 import type { StaticRouteProps } from "@impalajs/core";
 import { ChalkstreamVideo, ChalkStreamRef } from "chalkstream/react";
-import { useState, useRef } from "react";
+import { useState, useRef, useCallback } from "react";
 import { App } from "../App";
 import "./index.css";
 
 export default function Hello({ path }: StaticRouteProps) {
   const chalkStreamRef = useRef<ChalkStreamRef>(null);
 
-  const [streamingState, setStreamingState] = useState<string>();
-
   const [playerSessionId, setPlayerSessionId] = useState<string>();
+
+  const [isStreaming, setIsStreaming] = useState<boolean>(false);
+
+  const [error, setError] = useState<string>();
+
+  const [isReady, setIsReady] = useState<boolean>(false);
 
   function toggleStream() {
     console.log(chalkStreamRef.current);
@@ -23,16 +27,48 @@ export default function Hello({ path }: StaticRouteProps) {
     }
   }
 
+  const onReady = useCallback(
+    (sessionId: string) => {
+      setIsReady(true);
+      setPlayerSessionId(sessionId);
+    },
+    [setIsReady, setPlayerSessionId]
+  );
+
+  const onError = useCallback(
+    (error: string) => {
+      setError(error);
+    },
+    [setError]
+  );
+
+  const onStreamStart = useCallback(() => {
+    setIsStreaming(true);
+  }, [setIsStreaming]);
+
+  const onStreamStop = useCallback(() => {
+    setIsStreaming(false);
+  }, [setIsStreaming]);
+
   return (
     <App title="Home">
       <div className="App">
         <div className="card">
           <ChalkstreamVideo
             ref={chalkStreamRef}
-            onStatusChange={(state) => setStreamingState(state)}
+            onReady={onReady}
+            onStreamError={onError}
+            onStreamStart={onStreamStart}
+            onStreamStop={onStreamStop}
           />
-          <button onClick={toggleStream}>⏯️</button>
-          <label>{streamingState}</label>
+          {isReady ? (
+            <button
+              onClick={toggleStream}
+              title={isStreaming ? "Stop" : "Start"}
+            >
+              {isStreaming ? "⏹️ " : "⏺️"}
+            </button>
+          ) : null}
           {chalkStreamRef.current?.streamId && (
             <a href={`/play?id=${chalkStreamRef.current.streamId}`}>
               Watch stream

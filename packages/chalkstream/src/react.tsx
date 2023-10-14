@@ -1,27 +1,38 @@
 import React, {
   useRef,
   useImperativeHandle,
-  useMemo,
   useEffect,
   forwardRef,
   useState,
 } from "react";
 import { ChalkStream, type StreamOptions } from "./index.js";
 
-export interface ChalkStreamProps
-  extends React.VideoHTMLAttributes<HTMLVideoElement> {
-  onStatusChange?: StreamOptions["onStatusChange"];
-  onStreamError?: StreamOptions["onError"];
-  ingestServer?: StreamOptions["ingestServer"];
-  sessionId?: StreamOptions["sessionId"];
-}
+export type ChalkStreamProps = Omit<
+  React.VideoHTMLAttributes<HTMLVideoElement>,
+  "children" | "src"
+> &
+  Omit<StreamOptions, "onError" | "videoElement"> & {
+    onStreamError?: StreamOptions["onError"];
+  };
 
 type ChalkStreamRef = Omit<ChalkStream, "init"> | undefined;
 
 export { ChalkStreamRef };
 export const ChalkstreamVideo = forwardRef<ChalkStreamRef, ChalkStreamProps>(
   (
-    { onStatusChange, onStreamError, ingestServer, sessionId, ...props },
+    {
+      onStreamError,
+      mediaStream,
+      ingestServer,
+      sessionId,
+      chunkLength,
+      onChunkEncoded,
+      onChunkUploaded,
+      onStreamStart,
+      onStreamStop,
+      onReady,
+      ...props
+    },
     ref
   ) => {
     const videoRef = useRef<HTMLVideoElement>(null);
@@ -34,21 +45,26 @@ export const ChalkstreamVideo = forwardRef<ChalkStreamRef, ChalkStreamProps>(
       setLoaded(true);
       if (!("MediaRecorder" in window)) {
         console.warn("[chalkstream] Cannot initialise without MediaRecorder");
-        return undefined;
+        return;
       }
       if (!videoRef.current) {
-        return undefined;
+        return;
       }
       if (chalkstream.current) {
-        console.log(videoRef.current, chalkstream.current);
-        return undefined;
+        return;
       }
       chalkstream.current = new ChalkStream({
         videoElement: videoRef.current,
-        onStatusChange,
         onError: onStreamError,
+        mediaStream,
         ingestServer,
         sessionId,
+        chunkLength,
+        onChunkEncoded,
+        onChunkUploaded,
+        onStreamStart,
+        onStreamStop,
+        onReady,
       });
       chalkstream.current.init();
     }, [chalkstream, videoRef.current, loaded, videoRef]);

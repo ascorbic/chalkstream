@@ -9,6 +9,27 @@ export interface TransmuxMessage {
   ingestServer?: string;
 }
 
+export interface TransmuxReadyResponse {
+  type: "ready";
+}
+
+export interface TransmuxSuccessResponse {
+  type: "encoded" | "uploaded";
+  length: number;
+  sequence: number;
+  session: string;
+}
+
+export interface TransmuxErrorResponse {
+  type: "error";
+  error: string;
+}
+
+export type TransmuxResponse =
+  | TransmuxReadyResponse
+  | TransmuxSuccessResponse
+  | TransmuxErrorResponse;
+
 let ffmpeg: FFmpeg;
 
 // Load the FFmpeg library and create a new FFmpeg object
@@ -30,6 +51,7 @@ import("@ffmpeg/ffmpeg").then(async ({ createFFmpeg }) => {
   await ffmpeg.load();
 
   console.log("[chalkstream-worker] FFmpeg loading complete");
+  postMessage({ type: "ready" });
 });
 
 // Received a job from the main thread
@@ -64,24 +86,47 @@ onmessage = async (event: MessageEvent<TransmuxMessage>) => {
 
   // Read output file from FFmpeg virtual filesystem as array buffer
   const data = ffmpeg.FS("readFile", outputFileName);
+  postMessage({
+    type: "encoded",
+    sequence,
+    session,
+    length: data.length,
+  });
 
   // Delete output files from FFmpeg filesystem
   ffmpeg.FS("unlink", outputFileName);
-  const res = await putChunk(data, sequence, length, session, ingestServer);
-  if (res.ok) {
+  let res: Response | undefined = undefined;
+  try {
+    res = await putChunk(data, sequence, length, session, ingestServer);
+  } catch (err) {
+    console.error("[chalkstream-worker] Failed to upload chunk", {
+      sequence,
+      session,
+      err,
+    });
+    postMessage({ type: "error", error: (err as Error).message });
+    return;
+  }
+  if (res?.ok) {
     console.log("[chalkstream-worker] Uploaded chunk", {
       sequence,
-      length,
+      session,
+      length: data.length,
+    });
+    postMessage({
+      type: "uploaded",
+      sequence,
       session,
     });
-    postMessage({});
   } else {
     console.log("[chalkstream-worker] Failed to upload chunk", {
       sequence,
-      length,
       session,
     });
-    postMessage({ error: await res.text().catch(() => res.statusText) });
+    postMessage({
+      type: "error",
+      error: await res?.text().catch(() => res?.statusText),
+    });
   }
 };
 
@@ -95,7 +140,13 @@ async function putChunk(
   console.time("hash");
   const hash = await getDigest(chunk);
   console.timeEnd("hash");
-  console.log("Uploading chunk", { sequence, duration, session, hash });
+  console.log("Uploading chunk", {
+    sequence,
+    duration,
+    session,
+    hash,
+    length: chunk.length,
+  });
   return fetch(new URL(`/ingest/${session}/${hash}.ts`, ingestServer), {
     method: "PUT",
     body: chunk,
