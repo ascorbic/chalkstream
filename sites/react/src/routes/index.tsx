@@ -2,7 +2,6 @@ import type { StaticRouteProps } from "@impalajs/core";
 import { ChalkstreamVideo, ChalkStreamRef } from "chalkstream/react";
 import { useState, useRef } from "react";
 import { App } from "../App";
-import logo from "../assets/impala.png";
 import "./index.css";
 
 export default function Hello({ path }: StaticRouteProps) {
@@ -11,6 +10,7 @@ export default function Hello({ path }: StaticRouteProps) {
   const [streamingState, setStreamingState] = useState<string>();
 
   function toggleStream() {
+    console.log(chalkStreamRef.current);
     if (!chalkStreamRef.current) {
       return;
     }
@@ -24,16 +24,13 @@ export default function Hello({ path }: StaticRouteProps) {
   return (
     <App title="Home">
       <div className="App">
-        <div>
-          <img src={logo} alt="Impala Logo" className="logo" />
-        </div>
-        <h1>Impala</h1>
         <div className="card">
           <ChalkstreamVideo
             ref={chalkStreamRef}
             onStatusChange={(state) => setStreamingState(state)}
           />
-          <button onClick={toggleStream}>Toggle Stream</button>
+          <button onClick={toggleStream}>⏯️</button>
+          <label>{streamingState}</label>
         </div>
       </div>
     </App>

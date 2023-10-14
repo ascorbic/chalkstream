@@ -4,6 +4,7 @@ import React, {
   useMemo,
   useEffect,
   forwardRef,
+  useState,
 } from "react";
 import { ChalkStream, type StreamOptions } from "./index.js";
 
@@ -25,35 +26,41 @@ export const ChalkstreamVideo = forwardRef<ChalkStreamRef, ChalkStreamProps>(
   ) => {
     const videoRef = useRef<HTMLVideoElement>(null);
 
-    const chalkstream = useMemo(() => {
-      return new ChalkStream({
+    const [loaded, setLoaded] = useState(false);
+
+    const chalkstream = useRef<ChalkStream>();
+
+    useEffect(() => {
+      setLoaded(true);
+      if (!("MediaRecorder" in window)) {
+        console.warn("[chalkstream] Cannot initialise without MediaRecorder");
+        return undefined;
+      }
+      if (!videoRef.current) {
+        return undefined;
+      }
+      if (chalkstream.current) {
+        console.log(videoRef.current, chalkstream.current);
+        return undefined;
+      }
+      chalkstream.current = new ChalkStream({
+        videoElement: videoRef.current,
         onStatusChange,
         onError: onStreamError,
         ingestServer,
         sessionId,
       });
-    }, [onStatusChange, onStreamError, ingestServer, sessionId]);
-
-    useEffect(() => {
-      if (!chalkstream) {
-        return;
-      }
-      if (!("MediaRecorder" in window)) {
-        console.log("[chalkstream] Not initialising in SSR environment");
-        return undefined;
-      }
-      chalkstream.videoElement = videoRef.current ?? undefined;
-      chalkstream.init();
-    }, [chalkstream]);
+      chalkstream.current.init();
+    }, [chalkstream, videoRef.current, loaded, videoRef]);
 
     useImperativeHandle(
       ref,
       (): ChalkStreamRef => {
-        return chalkstream;
+        return chalkstream.current;
       },
-      [chalkstream]
+      [chalkstream.current]
     );
 
-    return <video ref={videoRef} {...props} />;
+    return <video autoPlay muted ref={videoRef} {...props} />;
   }
 );

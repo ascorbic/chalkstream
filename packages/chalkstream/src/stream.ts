@@ -157,6 +157,7 @@ See https://github.com/ascorbic/chalkstream#cross-origin-isolation for details
    * Starts streaming to the ingest server
    */
   public start() {
+    console.log("[chalkstream] Starting stream");
     if (!this._initted) {
       throw new Error("Must call init() before start()");
     }

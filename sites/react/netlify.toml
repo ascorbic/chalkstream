@@ -2,7 +2,7 @@
 publish = "/sites/react/dist/static"
 
 [dev]
-command = "pnpm run dev"
+framework = "vite"
 
 [[headers]]
 for = "/*"
