@@ -1,7 +1,7 @@
 {
   "name": "chalkstream",
   "version": "0.0.2",
-  "description": "",
+  "description": "Serverless edge video streaming",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -36,8 +36,11 @@
     "build": "tsup",
     "prepublish": "publint"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "video",
+    "streaming"
+  ],
+  "author": "Matt Kane <m@mk.gg>",
   "license": "MIT",
   "devDependencies": {
     "@ffmpeg/ffmpeg": "^0.11.6",

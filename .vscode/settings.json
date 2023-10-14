@@ -1,6 +1,8 @@
 {
     "deno.enablePaths": [
         "./sites/parcel/netlify/edge-functions",
+        "./sites/react/netlify/edge-functions",
+        "./sites/vanilla/netlify/edge-functions",
         "./packages/chalkstream/edge"
     ],
     "deno.importMap": ".netlify/edge-functions-import-map.json"
