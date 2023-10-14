@@ -1,5 +1,6 @@
 [build]
 publish = "/sites/vanilla/public"
+build = "pnpm run --filter chalkstream-vanilla-demo... build"
 
 [dev]
 framework = "#static"

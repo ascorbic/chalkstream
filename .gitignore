@@ -3,3 +3,4 @@ node_modules
 .netlify
 dist
 .DS_Store
+sites/vanilla/public/lib
