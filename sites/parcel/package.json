@@ -4,7 +4,7 @@
   "description": "",
   "private": true,
   "scripts": {
-    "dev": "NODE_ENV=production parcel src/*.html",
+    "dev": "NODE_ENV=development FAST_REFRESH=true parcel src/*.html --no-hmr",
     "build": "parcel build src/*.html && cp -r static/* dist",
     "generate-poster": "ffmpeg -loop 1 -i static/poster.png -c:v libx264 -t 6 -pix_fmt yuv420p -vf \"scale=640:480\" -f mpegts static/poster.ts"
   },

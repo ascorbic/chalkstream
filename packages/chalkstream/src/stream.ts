@@ -1,5 +1,5 @@
 import type { TransmuxMessage } from "./transcode.worker";
-import { ulid } from "ulid";
+import { ulid } from "ulidx";
 
 // @ts-expect-error This is inlined by tsup
 import TranscodeWorker from "./transcode.worker";
@@ -57,7 +57,7 @@ async function hashString(id: string): Promise<string> {
 }
 
 export class ChalkStream {
-  public readonly videoElement?: HTMLVideoElement;
+  public videoElement?: HTMLVideoElement;
 
   /**
    * The ingest session id
@@ -96,7 +96,10 @@ export class ChalkStream {
     this.mediaStream = options.mediaStream;
     this.videoElement = options.videoElement;
     this.sessionId = options.sessionId ?? ulid();
-    this._ingestServer = options.ingestServer ?? window.location.origin;
+    this._ingestServer =
+      options.ingestServer ??
+      globalThis.window?.location.origin ??
+      "http://localhost:8888";
     this._onStatusChange = options.onStatusChange;
     this._onError = options.onError;
   }

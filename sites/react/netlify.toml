@@ -1,0 +1,27 @@
+[build]
+publish = "dist/static"
+
+[dev]
+command = "pnpm run dev"
+
+[[headers]]
+for = "/*"
+
+[headers.values]
+"Cross-Origin-Opener-Policy" = "same-origin"
+"Cross-Origin-Embedder-Policy" = "require-corp"
+
+[[headers]]
+for = "/poster.ts"
+
+[headers.values]
+"Content-Type" = "video/mp2t"
+"Access-Control-Allow-Origin" = "*"
+"Access-Control-Allow-Methods" = "GET"
+"Access-Control-Allow-Headers" = "*"
+"Cache-Control" = "public, max-age=31536000, immutable, s-maxage=31536000"
+
+[[redirects]]
+from = "/play/*"
+to = "/play.html"
+status = 200
