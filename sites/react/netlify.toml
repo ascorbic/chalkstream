@@ -1,5 +1,5 @@
 [build]
-publish = "dist/static"
+publish = "/sites/react/dist/static"
 
 [dev]
 command = "pnpm run dev"
