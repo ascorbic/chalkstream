@@ -12,21 +12,21 @@
   "exports": {
     ".": {
       "require": {
-        "types": "./dist/index.d.ts",
+        "types": "./dist/index.d.cts",
         "default": "./dist/index.cjs"
       },
       "import": {
-        "types": "./dist/index.d.mts",
+        "types": "./dist/index.d.ts",
         "default": "./dist/index.js"
       }
     },
     "./react": {
       "require": {
-        "types": "./dist/react.d.ts",
+        "types": "./dist/react.d.cts",
         "default": "./dist/react.cjs"
       },
       "import": {
-        "types": "./dist/react.d.mts",
+        "types": "./dist/react.d.ts",
         "default": "./dist/react.js"
       }
     },
