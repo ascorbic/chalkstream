@@ -16,7 +16,8 @@
     "@impalajs/react": "latest",
     "chalkstream": "workspace:^",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-player": "^2.13.0"
   },
   "devDependencies": {
     "@types/node": "^18.15.7",

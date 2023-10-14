@@ -9,6 +9,8 @@ export default function Hello({ path }: StaticRouteProps) {
 
   const [streamingState, setStreamingState] = useState<string>();
 
+  const [playerSessionId, setPlayerSessionId] = useState<string>();
+
   function toggleStream() {
     console.log(chalkStreamRef.current);
     if (!chalkStreamRef.current) {
@@ -31,6 +33,11 @@ export default function Hello({ path }: StaticRouteProps) {
           />
           <button onClick={toggleStream}>⏯️</button>
           <label>{streamingState}</label>
+          {chalkStreamRef.current?.streamId && (
+            <a href={`/play?id=${chalkStreamRef.current.streamId}`}>
+              Watch stream
+            </a>
+          )}
         </div>
       </div>
     </App>
