@@ -95,7 +95,7 @@ export class ChalkStream {
   public readonly sessionId: string;
   public mediaStream?: MediaStream;
 
-  private _isRecording = false;
+  private _isStreaming = false;
 
   private _ingestServer: string;
 
@@ -104,8 +104,8 @@ export class ChalkStream {
   /**
    * Is the stream currently recording?
    */
-  public get isRecording() {
-    return this._isRecording;
+  public get isStreaming() {
+    return this._isStreaming;
   }
 
   private _onError?: (message: string) => void;
@@ -206,7 +206,7 @@ See https://github.com/ascorbic/chalkstream#cross-origin-isolation for details
     if (!this._initted) {
       throw new Error("Must call init() before start()");
     }
-    if (this.isRecording) {
+    if (this.isStreaming) {
       return;
     }
     // Start recorder with timeslice of 6 seconds
@@ -214,7 +214,7 @@ See https://github.com/ascorbic/chalkstream#cross-origin-isolation for details
 
     this._onStreamStart?.(this.streamId);
 
-    this._isRecording = true;
+    this._isStreaming = true;
   }
 
   /**
@@ -222,7 +222,7 @@ See https://github.com/ascorbic/chalkstream#cross-origin-isolation for details
    */
   public stop() {
     this._recorder?.stop();
-    this._isRecording = false;
+    this._isStreaming = false;
     this._onStreamStop?.(this.streamId);
   }
 
@@ -303,7 +303,7 @@ See https://github.com/ascorbic/chalkstream#cross-origin-isolation for details
         // Send message to worker, and transfer ownership of buffer
         this._worker?.postMessage(message, [buffer]);
         // If we're recording, start a new clip
-        if (this._isRecording) {
+        if (this._isStreaming) {
           this._recorder?.start(this._timeslice);
         }
 

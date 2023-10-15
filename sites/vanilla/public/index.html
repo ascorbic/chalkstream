@@ -16,7 +16,6 @@
       <h1>Chalkstream</h1>
     </a>
     <div id="controls-container">
-
       <div id="status">Loading...</div>
       <div id="controls" hidden>
         <button id="start">Start streaming</button>
@@ -70,7 +69,7 @@
     const start = document.getElementById("start");
 
     start.addEventListener("click", async () => {
-      if (!stream.isRecording) {
+      if (!stream.isStreaming) {
         stream.start();
         start.textContent = "Stop";
       } else {

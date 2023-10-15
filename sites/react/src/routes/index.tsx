@@ -20,7 +20,7 @@ export default function Hello({ path }: StaticRouteProps) {
     if (!chalkStreamRef.current) {
       return;
     }
-    if (chalkStreamRef.current.isRecording) {
+    if (chalkStreamRef.current.isStreaming) {
       chalkStreamRef.current.stop();
     } else {
       chalkStreamRef.current.start();

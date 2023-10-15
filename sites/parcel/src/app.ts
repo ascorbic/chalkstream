@@ -25,7 +25,7 @@ const stream = new ChalkStream({
 const start = document.getElementById("start") as HTMLButtonElement;
 
 start.addEventListener("click", async () => {
-  if (!stream.isRecording) {
+  if (!stream.isStreaming) {
     stream.start();
     start.textContent = "Stop";
   } else {
