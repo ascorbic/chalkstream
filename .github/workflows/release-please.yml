@@ -36,11 +36,13 @@ jobs:
       - run: pnpm build:packages
         if: ${{ steps.release.outputs.releases_created }}
       - name: Authenticate pnpm
-        run: pnpm config set '//registry.npmjs.org/:_authToken' "${NPM_AUTH_TOKEN}"
+        run:
+          pnpm config set '//registry.npmjs.org/:_authToken' "${NPM_AUTH_TOKEN}"
         if: ${{ steps.release.outputs.releases_created }}
         env:
           NPM_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
       - run: pnpm -r publish
-        env:
-          NPM_CONFIG_PROVENANCE: true
+        # TODO: enable when repo is public
+        # env:
+        #   NPM_CONFIG_PROVENANCE: true
         if: ${{ steps.release.outputs.releases_created }}
