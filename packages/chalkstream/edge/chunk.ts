@@ -1,10 +1,7 @@
 import type { Context, Config } from "@netlify/edge-functions";
-import type { Blobs } from "https://unpkg.com/@netlify/blobs@2.2.0/dist/main.d.ts";
+import { getStore } from "https://esm.sh/@netlify/blobs";
 
-export default async function handler(
-  _request: Request,
-  context: Context & { blobs?: Blobs }
-) {
+export default async function handler(_request: Request, context: Context) {
   const { session, digest } = context.params;
 
   if (!session || !digest) {
@@ -12,13 +9,10 @@ export default async function handler(
   }
   console.log(`getting ${session}/${digest}.ts`);
 
-  if (!context.blobs) {
-    console.log("no blobs");
-    return new Response("No blobs", { status: 202 });
-  }
+  const store = getStore("chunks");
 
   try {
-    const body = await context.blobs.get(`${session}/${digest}.ts`, {
+    const body = await store.get(`${session}/${digest}.ts`, {
       type: "stream",
     });
     if (!body) {

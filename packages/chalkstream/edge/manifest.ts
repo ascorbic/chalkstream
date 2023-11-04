@@ -1,5 +1,5 @@
 import type { Context, Config } from "@netlify/edge-functions";
-import type { Blobs } from "https://unpkg.com/@netlify/blobs@2.2.0/dist/main.d.ts";
+import { getStore } from "https://esm.sh/@netlify/blobs";
 import type { Manifest } from "./ingest.ts";
 
 const epoch = Date.now();
@@ -51,10 +51,7 @@ function manifestToPlaylist(json: Manifest, session: string): string {
     .join("\n");
 }
 
-export default async function handler(
-  _request: Request,
-  context: Context & { blobs?: Blobs }
-) {
+export default async function handler(_request: Request, context: Context) {
   const { session } = context.params;
 
   if (!session) {
@@ -62,13 +59,10 @@ export default async function handler(
   }
   console.log(`getting ${session}/manifest.json`);
 
-  if (!context.blobs) {
-    console.log("no blobs");
-    return new Response("No blobs", { status: 202 });
-  }
+  const store = getStore("chunks");
 
   try {
-    const manifest = await context.blobs.get(`${session}/manifest.json`, {
+    const manifest = await store.get(`${session}/manifest.json`, {
       type: "json",
     });
 
