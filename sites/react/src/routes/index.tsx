@@ -16,7 +16,6 @@ export default function Hello({ path }: StaticRouteProps) {
   const [isReady, setIsReady] = useState<boolean>(false);
 
   function toggleStream() {
-    console.log(chalkStreamRef.current);
     if (!chalkStreamRef.current) {
       return;
     }

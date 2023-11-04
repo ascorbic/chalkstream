@@ -13,8 +13,8 @@
     "generate-poster": "ffmpeg -loop 1 -i public/poster.png -c:v libx264 -t 6 -pix_fmt yuv420p -vf \"scale=640:480\" -f mpegts public/poster.ts"
   },
   "dependencies": {
-    "@impalajs/core": "latest",
-    "@impalajs/react": "latest",
+    "@impalajs/core": "^0.0.12",
+    "@impalajs/react": "^0.0.12",
     "chalkstream": "workspace:^",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

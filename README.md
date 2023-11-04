@@ -11,8 +11,8 @@
 Chalkstream is an open source, self-hosted live streaming "server" that runs on
 serverless edge functions. You can stream right from the browser, with a public
 link to share with your friends. It uses Netlify Edge Functions to ingest and
-serve HLS streams, and the chunks are stored in Netlify Blob Store. Control your
-own data.
+serve HLS streams, and the chunks are stored in Netlify Blobs. Control your own
+data.
 
 ## How it works
 
@@ -22,7 +22,7 @@ them in a playlist. Chalkstream does this encoding in the browser using a
 WebAssembly build of FFmpeg. This is a lot quicker if your browser natively
 supports H.264 (most except Firefox). Otherwise your computer needs to be quite
 fast if it is to handle real-time encoding. The chunks are then uploaded to
-Netlify Blob Store. Netlify Edge Functions handle the ingest and generating the
+Netlify Blobs. Netlify Edge Functions handle the ingest and generating the
 dynamic playlist.
 
 **[See a demo](https://chalkstream.netlify.app/)**
@@ -229,17 +229,11 @@ secrets or recite your wallet seed phrase.
 
 ### 1. Deploy the site
 
-<a
-href="https://app.netlify.com/start/deploy?repository=https://github.com/ascorbic/chalkstream"
+<a href="https://app.netlify.com/start/deploy?repository=https://github.com/ascorbic/chalkstream">
+  <img src="https://www.netlify.com/img/deploy/button.svg" alt="Deploy to Netlify" />
+</a>
 
-> <img
-
-    src="https://www.netlify.com/img/deploy/button.svg"
-    alt="Deploy to Netlify"
-
-/></a>
-
-Clone the repo, or use the button above to deploy the site to Netlify for free.
+Clone the repo, or use the button above to deploy the site to Netlify.
 
 ### 2. Configure stream retention
 
