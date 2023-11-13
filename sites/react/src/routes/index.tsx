@@ -27,7 +27,9 @@ export default function Hello({ path }: StaticRouteProps) {
     if (chalkStreamRef.current.isStreaming) {
       chalkStreamRef.current.stop();
     } else {
-      const authorization = await netlifyIdentity.refresh();
+      console.log(netlifyIdentity);
+      const user = netlifyIdentity.currentUser();
+      const authorization = await (user as any)?.jwt();
       chalkStreamRef.current.authorization = authorization;
       chalkStreamRef.current.start();
     }

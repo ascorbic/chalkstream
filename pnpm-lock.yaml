@@ -100,6 +100,9 @@ importers:
       '@impalajs/react':
         specifier: ^0.0.12
         version: 0.0.12(react-dom@18.2.0)(react@18.2.0)(vite@4.4.11)
+      '@netlify/blobs':
+        specifier: ^6.0.0
+        version: 6.0.0
       '@netlify/functions':
         specifier: ^2.4.0
         version: 2.4.0

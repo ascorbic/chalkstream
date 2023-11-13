@@ -15,6 +15,7 @@
   "dependencies": {
     "@impalajs/core": "^0.0.12",
     "@impalajs/react": "^0.0.12",
+    "@netlify/blobs": "^6.0.0",
     "@netlify/functions": "^2.4.0",
     "chalkstream": "workspace:^",
     "netlify-identity-widget": "^1.9.2",
