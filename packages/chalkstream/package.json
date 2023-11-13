@@ -30,10 +30,20 @@
         "default": "./dist/react.js"
       }
     },
+    "./node": {
+      "require": {
+        "types": "./dist/node.d.cts",
+        "default": "./dist/node.cjs"
+      },
+      "import": {
+        "types": "./dist/node.d.ts",
+        "default": "./dist/node.js"
+      }
+    },
     "./edge": "./edge/mod.ts"
   },
   "scripts": {
-    "build": "tsup",
+    "build": "tsup && tsup --config=tsup.config.node.ts",
     "prepublish": "publint"
   },
   "keywords": [
@@ -44,6 +54,7 @@
   "license": "MIT",
   "devDependencies": {
     "@ffmpeg/ffmpeg": "^0.11.6",
+    "@netlify/functions": "^2.4.0",
     "@types/react": "^18.2.28",
     "esbuild-plugin-inline-worker": "^0.1.1",
     "publint": "^0.2.4",
@@ -56,5 +67,11 @@
   "peerDependencies": {
     "react": "^18.0.0",
     "react-dom": "^18.0.0"
+  },
+  "dependencies": {
+    "@netlify/blobs": "^6.0.0"
+  },
+  "engines": {
+    "node": ">=16"
   }
 }

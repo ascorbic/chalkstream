@@ -1,9 +1,10 @@
-import type { Context, Config } from "@netlify/edge-functions";
-import { getStore } from "https://esm.sh/@netlify/blobs";
-import { handleResponse } from "../shared/ingest.ts";
+import type { Context, Config } from "@netlify/functions";
+import { getStore } from "@netlify/blobs";
+import { handleResponse } from "../shared/ingest.js";
+import { webcrypto } from "node:crypto";
 
 async function hashString(id: string): Promise<string> {
-  const hash = await crypto.subtle.digest(
+  const hash = await webcrypto.subtle.digest(
     "SHA-1",
     new TextEncoder().encode(id)
   );
@@ -12,7 +13,7 @@ async function hashString(id: string): Promise<string> {
     .join("");
 }
 
-export default async function handler(request: Request, context: Context) {
+export async function ingestHandler(request: Request, context: Context) {
   const { session, digest } = context.params;
   const store = getStore("chunks");
   const sessionKey = await hashString(session);
@@ -24,8 +25,3 @@ export default async function handler(request: Request, context: Context) {
     sessionKey,
   });
 }
-
-export const config: Config = {
-  method: "PUT",
-  path: "/ingest/:session/:digest.ts",
-};

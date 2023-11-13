@@ -14,15 +14,15 @@
     <a href="https://github.com/ascorbic/chalkstream" id="logo"><img src="stream.png" alt="Stream" width="100" />
       <h1>Chalkstream</h1>
     </a>
-    <div id="controls-container">
 
+    <video id="camera" autoplay muted></video>
+    <div id="controls-container">
       <div id="status">Loading...</div>
       <div id="controls" hidden>
         <button id="start">Start streaming</button>
         <a id="playback-link" target="_blank" hidden>Playback link</a>
       </div>
     </div>
-    <video id="camera" autoplay muted></video>
     <div id="info">
       <p>
         This streams live from your browser. Chunks are converted to MPEG-TS
