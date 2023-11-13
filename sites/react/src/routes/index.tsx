@@ -1,7 +1,8 @@
 import type { StaticRouteProps } from "@impalajs/core";
 import { ChalkstreamVideo, ChalkStreamRef } from "chalkstream/react";
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { App } from "../App";
+import netlifyIdentity from "netlify-identity-widget";
 import "./index.css";
 
 export default function Hello({ path }: StaticRouteProps) {
@@ -14,6 +15,10 @@ export default function Hello({ path }: StaticRouteProps) {
   const [error, setError] = useState<string>();
 
   const [isReady, setIsReady] = useState<boolean>(false);
+
+  useEffect(() => {
+    netlifyIdentity.init();
+  }, []);
 
   function toggleStream() {
     if (!chalkStreamRef.current) {
@@ -52,6 +57,7 @@ export default function Hello({ path }: StaticRouteProps) {
   return (
     <App title="Home">
       <div className="App">
+        <div data-netlify-identity-button>Login with Netlify Identity</div>
         <div className="card">
           <ChalkstreamVideo
             ref={chalkStreamRef}
