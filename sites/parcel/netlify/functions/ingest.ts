@@ -1,5 +1,7 @@
 import type { Config } from "@netlify/functions";
-export { ingestHandler as default } from "chalkstream/node";
+import { ingestHandler } from "chalkstream/node";
+
+export default ingestHandler;
 
 export const config: Config = {
   method: "PUT",
