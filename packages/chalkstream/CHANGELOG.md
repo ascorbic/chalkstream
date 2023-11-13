@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.4](https://github.com/ascorbic/chalkstream/compare/chalkstream-v0.0.3...chalkstream-v0.0.4) (2023-11-13)
+
+
+### Features
+
+* enable support for node functions ([#5](https://github.com/ascorbic/chalkstream/issues/5)) ([d5dfde6](https://github.com/ascorbic/chalkstream/commit/d5dfde6d19bbc5795a9af749dcd023bc263fc403))
+
 ## 0.0.3 (2023-10-15)
 
 
