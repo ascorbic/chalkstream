@@ -119,6 +119,9 @@ importers:
         specifier: ^2.13.0
         version: 2.13.0(react@18.2.0)
     devDependencies:
+      '@types/netlify-identity-widget':
+        specifier: ^1.9.6
+        version: 1.9.6
       '@types/node':
         specifier: ^18.15.7
         version: 18.18.5
@@ -1940,6 +1943,10 @@ packages:
   /@trysound/sax@0.2.0:
     resolution: {integrity: sha512-L7z9BgrNEcYyUYtF+HaEfiS5ebkh9jXqbszz7pC0hRBPaatV0XjSD3+eHrpqFemQfgwiFF0QPIarnIihIDn7OA==}
     engines: {node: '>=10.13.0'}
+    dev: true
+
+  /@types/netlify-identity-widget@1.9.6:
+    resolution: {integrity: sha512-MGRmGSQov+Udx3hwpWHu2Wxxvq00e3MywsJ9rkpI/tgOyhyhmpcbcBKeM6NRXGUgbrnqJfiiU/hOJQTvqg+r7g==}
     dev: true
 
   /@types/node@18.18.5:

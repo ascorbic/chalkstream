@@ -20,13 +20,15 @@ export default function Hello({ path }: StaticRouteProps) {
     netlifyIdentity.init();
   }, []);
 
-  function toggleStream() {
+  async function toggleStream() {
     if (!chalkStreamRef.current) {
       return;
     }
     if (chalkStreamRef.current.isStreaming) {
       chalkStreamRef.current.stop();
     } else {
+      const authorization = await netlifyIdentity.refresh();
+      chalkStreamRef.current.authorization = authorization;
       chalkStreamRef.current.start();
     }
   }
@@ -57,7 +59,7 @@ export default function Hello({ path }: StaticRouteProps) {
   return (
     <App title="Home">
       <div className="App">
-        <div data-netlify-identity-button>Login with Netlify Identity</div>
+        <div data-netlify-identity-menu></div>
         <div className="card">
           <ChalkstreamVideo
             ref={chalkStreamRef}
