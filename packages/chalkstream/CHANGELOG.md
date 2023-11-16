@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.0.4](https://github.com/ascorbic/chalkstream/compare/chalkstream-v0.0.3...chalkstream-v0.0.4) (2023-11-16)
+
+
+### Features
+
+* add auth support ([#7](https://github.com/ascorbic/chalkstream/issues/7)) ([ce90707](https://github.com/ascorbic/chalkstream/commit/ce90707e4484a84268471e21a3126d2b29dd394e))
+* enable support for node functions ([#5](https://github.com/ascorbic/chalkstream/issues/5)) ([d5dfde6](https://github.com/ascorbic/chalkstream/commit/d5dfde6d19bbc5795a9af749dcd023bc263fc403))
+
+
+### Bug Fixes
+
+* correct exports and files ([#8](https://github.com/ascorbic/chalkstream/issues/8)) ([3564974](https://github.com/ascorbic/chalkstream/commit/356497452efc5945f8cea6440545d5c089a0dae4))
+
 ## [0.0.4](https://github.com/ascorbic/chalkstream/compare/chalkstream-v0.0.3...chalkstream-v0.0.4) (2023-11-13)
 
 
