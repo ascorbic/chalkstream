@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.0.5](https://github.com/ascorbic/chalkstream/compare/chalkstream-v0.0.4...chalkstream-v0.0.5) (2023-11-16)
+
+
+### Features
+
+* add auth support ([#7](https://github.com/ascorbic/chalkstream/issues/7)) ([ce90707](https://github.com/ascorbic/chalkstream/commit/ce90707e4484a84268471e21a3126d2b29dd394e))
+
+
+### Bug Fixes
+
+* correct exports and files ([#8](https://github.com/ascorbic/chalkstream/issues/8)) ([3564974](https://github.com/ascorbic/chalkstream/commit/356497452efc5945f8cea6440545d5c089a0dae4))
+* update blobs ([#9](https://github.com/ascorbic/chalkstream/issues/9)) ([733ada2](https://github.com/ascorbic/chalkstream/commit/733ada226bee3d8b16628f7030282bbe7d719119))
+
 ## [0.0.4](https://github.com/ascorbic/chalkstream/compare/chalkstream-v0.0.3...chalkstream-v0.0.4) (2023-11-16)
 
 
