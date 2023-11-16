@@ -5,7 +5,6 @@
     "plugins": [
         "node-workspace"
     ],
-    "bootstrap-sha": "16146d362761fc6c33309f0cf627a71d5566948c",
     "bump-minor-pre-major": true,
     "bump-patch-for-minor-pre-major": true,
     "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json"
