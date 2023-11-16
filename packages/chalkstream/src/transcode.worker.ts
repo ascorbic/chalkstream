@@ -7,6 +7,7 @@ export interface TransmuxMessage {
   session: string;
   transcodeVideo?: boolean;
   ingestServer?: string;
+  authorization?: string;
 }
 
 export interface TransmuxReadyResponse {
@@ -56,8 +57,15 @@ import("@ffmpeg/ffmpeg").then(async ({ createFFmpeg }) => {
 
 // Received a job from the main thread
 onmessage = async (event: MessageEvent<TransmuxMessage>) => {
-  const { buffer, sequence, length, session, transcodeVideo, ingestServer } =
-    event.data;
+  const {
+    buffer,
+    sequence,
+    length,
+    session,
+    transcodeVideo,
+    ingestServer,
+    authorization,
+  } = event.data;
 
   const inputFileName = `${sequence + 1}.webm`;
   const outputFileName = `${sequence + 1}.ts`;
@@ -97,7 +105,14 @@ onmessage = async (event: MessageEvent<TransmuxMessage>) => {
   ffmpeg.FS("unlink", outputFileName);
   let res: Response | undefined = undefined;
   try {
-    res = await putChunk(data, sequence, length, session, ingestServer);
+    res = await putChunk({
+      chunk: data,
+      sequence,
+      duration: length,
+      session,
+      ingestServer,
+      authorization,
+    });
   } catch (err) {
     console.error("[chalkstream-worker] Failed to upload chunk", {
       sequence,
@@ -130,16 +145,22 @@ onmessage = async (event: MessageEvent<TransmuxMessage>) => {
   }
 };
 
-async function putChunk(
-  chunk: Uint8Array,
-  sequence: number,
-  duration: number,
-  session: string,
-  ingestServer?: string
-) {
-  console.time("hash");
+async function putChunk({
+  chunk,
+  sequence,
+  duration,
+  session,
+  ingestServer,
+  authorization,
+}: {
+  chunk: Uint8Array;
+  sequence: number;
+  duration: number;
+  session: string;
+  ingestServer?: string;
+  authorization?: string;
+}) {
   const hash = await getDigest(chunk);
-  console.timeEnd("hash");
   console.log("Uploading chunk", {
     sequence,
     duration,
@@ -147,6 +168,11 @@ async function putChunk(
     hash,
     length: chunk.length,
   });
+
+  const auth: HeadersInit | undefined = authorization
+    ? { Authorization: `Bearer ${authorization}` }
+    : undefined;
+
   return fetch(new URL(`/ingest/${session}/${hash}.ts`, ingestServer), {
     method: "PUT",
     body: chunk,
@@ -154,6 +180,7 @@ async function putChunk(
       "Content-Type": "video/mp2t",
       "X-Sequence": String(sequence),
       "X-Duration": (duration / 1000).toFixed(2),
+      ...auth,
     },
   });
 }

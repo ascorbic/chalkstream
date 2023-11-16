@@ -66,6 +66,11 @@ export interface StreamOptions {
    * @param message The error message
    */
   onError?: (message: string) => void;
+
+  /**
+   * An optional bearer token to use when uploading chunks
+   */
+  authorization?: string;
 }
 
 // Preferred mimetypes, in descending order
@@ -94,6 +99,8 @@ export class ChalkStream {
    */
   public readonly sessionId: string;
   public mediaStream?: MediaStream;
+
+  public authorization?: string;
 
   private _isStreaming = false;
 
@@ -136,6 +143,7 @@ export class ChalkStream {
     this.mediaStream = options.mediaStream;
     this.videoElement = options.videoElement;
     this.sessionId = options.sessionId ?? ulid();
+    this.authorization = options.authorization;
     this._ingestServer =
       options.ingestServer ??
       globalThis.window?.location.origin ??
@@ -298,6 +306,7 @@ See https://github.com/ascorbic/chalkstream#cross-origin-isolation for details
           session: this.sessionId!,
           transcodeVideo: this._transcodeVideo,
           ingestServer: this._ingestServer,
+          authorization: this.authorization,
         };
         sequence++;
         // Send message to worker, and transfer ownership of buffer
