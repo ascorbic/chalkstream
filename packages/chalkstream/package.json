@@ -7,7 +7,8 @@
   "types": "dist/index.d.ts",
   "files": [
     "dist",
-    "edge"
+    "edge",
+    "shared"
   ],
   "exports": {
     ".": {
@@ -18,7 +19,8 @@
       "import": {
         "types": "./dist/index.d.ts",
         "default": "./dist/index.js"
-      }
+      },
+      "deno": "./edge/mod.ts"
     },
     "./react": {
       "require": {

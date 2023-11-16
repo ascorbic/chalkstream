@@ -1,6 +1,5 @@
 import type { Config } from "@netlify/edge-functions";
 
-// export { chunkHandler as default } from "https://esm.sh/chalkstream";
 export { chunkHandler as default } from "../../node_modules/chalkstream/edge/mod.ts";
 
 export const config: Config = {
