@@ -71,7 +71,7 @@
     "react-dom": "^18.0.0"
   },
   "dependencies": {
-    "@netlify/blobs": "^6.0.0"
+    "@netlify/blobs": "^6.3.0"
   },
   "engines": {
     "node": ">=16"
