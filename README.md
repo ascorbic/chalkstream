@@ -1,10 +1,11 @@
-<div style="text-align:center"><img src="./src/stream.png" width="128" height="128" alt="Chalkstream">
+<div align="center">
+![Chalkstream serverless live-streaming)](https://github.com/ascorbic/chalkstream/assets/213306/b1f2e96b-546c-4b40-8707-5de307b76920)
 
 # Chalkstream
 
 ## Serverless live streaming
 
-<a href="https://app.netlify.com/start/deploy?repository=https://github.com/ascorbic/chalkstream"><img src="https://www.netlify.com/img/deploy/button.svg" alt="Deploy to Netlify"></a>
+<a href="https://app.netlify.com/start/deploy?repository=https://github.com/ascorbic/chalkstream-template"><img src="https://www.netlify.com/img/deploy/button.svg" alt="Deploy to Netlify"></a>
 
 </div>
 
@@ -25,7 +26,7 @@ fast if it is to handle real-time encoding. The chunks are then uploaded to
 Netlify Blobs. Netlify Edge Functions handle the ingest and generating the
 dynamic playlist.
 
-**[See a demo](https://chalkstream.netlify.app/)**
+**[See a demo](https://chalkstream-astro.netlify.app/)**
 
 When you load the broadcast page it generates a random stream ID, and once you
 start streaming you can share a page with the live stream. HLS streams can be
