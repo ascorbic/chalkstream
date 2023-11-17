@@ -166,7 +166,7 @@ match.
 // netlify/edge-functions/ingest.ts
 import type { Context, Config } from "@netlify/edge-functions";
 
-export { ingestHandler as default } from "https://esm.sh/chalkstream/edge/mod.ts";
+export { ingestHandler as default } from "https://esm.sh/chalkstream/edge";
 
 export const config: Config = {
   method: "PUT",
@@ -178,7 +178,7 @@ export const config: Config = {
 // netlify/edge-functions/chunk.ts
 import type { Context, Config } from "@netlify/edge-functions";
 
-export { chunkHandler as default } from "https://esm.sh/chalkstream/edge/mod.ts";
+export { chunkHandler as default } from "https://esm.sh/chalkstream/edge";
 
 export const config: Config = {
   method: "GET",
@@ -190,7 +190,7 @@ export const config: Config = {
 // netlify/edge-functions/manifest.ts
 import type { Context, Config } from "@netlify/edge-functions";
 
-export { manifestHandler as default } from "https://esm.sh/chalkstream/edge/mod.ts";
+export { manifestHandler as default } from "https://esm.sh/chalkstream/edge";
 
 export const config: Config = {
   method: "GET",
@@ -212,41 +212,31 @@ object in a ref.
 
 By default, anybody can create a stream, and anybody can view it.
 
-Chunks are retained for ten minutes. If you deploy the site yourself you should
-restrict access to prevent abuse. You can then increase the chunk retention time
-if you would like streams to be available for longer. Any completed stream can
-be viewed on-demand, automatically. A stream is considered complete if no chunks
-have been received for 30 seconds, but you can resume streaming with the same
-session id and it will continue where it left off.
+If you deploy the site yourself you should restrict access to prevent abuse. To
+help with this, you can pass an "authorization" prop to the Chalkstream
+consturctor, and it will be sent to the ingest endpoint as a bearer token. You
+will need to check that header yourself at the moment!
 
-## Security
+Any completed stream can be viewed on-demand automatically. A stream is
+considered complete if no chunks have been received for 30 seconds, but you can
+resume streaming with the same session id and it will continue where it left
+off.
 
 All streams are public by default, and anyone can access the ingest endpoint. If
 you want to do anything serious you should restrict access. The playback
 endpoints require knowing the stream id, which is a hash of the session ID.
-Anyone who knows the session ID can record to that stream, so don't share it! It
-uses SHA-1 hashing, which is not cryptographically secure, but it's good enough
-for something with 10 minute retention. Don't use your stream to record state
-secrets or recite your wallet seed phrase.
+Anyone who knows the session ID can record to that stream, so don't share it!
+Don't use your stream to record state secrets or recite your wallet seed phrase.
 
 ### 1. Deploy the site
 
-<a href="https://app.netlify.com/start/deploy?repository=https://github.com/ascorbic/chalkstream">
+<a href="https://app.netlify.com/start/deploy?repository=https://github.com/ascorbic/chalkstream-template">
   <img src="https://www.netlify.com/img/deploy/button.svg" alt="Deploy to Netlify" />
 </a>
 
 Clone the repo, or use the button above to deploy the site to Netlify.
 
-### 2. Configure stream retention
-
-The default retention is 10 minutes. You can change this by setting the
-`CHALKSTREAM_RETENTION` environment variable to the number of minutes you want
-to retain chunks for. You can also set `CHALKSTREAM_RETENTION` to `0` to retain
-chunks indefinitely. ### 3. Customise the site, player etc The pages are
-`src/index.html` (the broadcast page) and `src/play.html` (the playback page).
-It's all vanilla HTML, CSS and TypeScript, so you can customise it however you
-like. The edge functions are in `netlify/edge-functions`, where you can
-customise the HLS playlist generation if you need to.
+### 2. Customise the site, player etc
 
 ### Copyright
 
