@@ -1,6 +1,6 @@
 <div align="center">
   
-<img src="https://github.com/ascorbic/chalkstream/assets/213306/00028368-0adc-4665-93b4-f74612c4a96a" width="128" height="128" alt="Chalkstream" />
+<img src="https://github.com/ascorbic/chalkstream/blob/main/sites/vanilla/public/stream.png?raw=true" width="128" height="128" alt="Chalkstream" />
 
 # Chalkstream
 
