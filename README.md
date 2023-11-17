@@ -1,5 +1,6 @@
 <div align="center">
-![Chalkstream serverless live-streaming)](https://github.com/ascorbic/chalkstream/assets/213306/b1f2e96b-546c-4b40-8707-5de307b76920)
+  
+<img src="https://github.com/ascorbic/chalkstream/assets/213306/00028368-0adc-4665-93b4-f74612c4a96a" width="128" height="128" alt="Chalkstream" />
 
 # Chalkstream
 
